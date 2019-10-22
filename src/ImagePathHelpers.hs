@@ -5,8 +5,8 @@ module ImagePathHelpers
   )
 where
 
-generatePath :: String -> String -> String
-generatePath subDirectory name =
+newPath :: String -> String -> String
+newPath subDirectory name =
   "C:/Users/lczer/Desktop/Projects/HaskellGame/Explore/app/assets/images/"
     ++ subDirectory
     ++ "/"
@@ -14,10 +14,10 @@ generatePath subDirectory name =
     ++ ".bmp"
 
 borderPath :: String -> String
-borderPath = generatePath "borders"
+borderPath = newPath "borders"
 
 floorPath :: String -> String
-floorPath = generatePath "floors"
+floorPath = newPath "floors"
 
 wallPath :: String -> String
-wallPath = generatePath "walls"
+wallPath = newPath "walls"

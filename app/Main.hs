@@ -15,7 +15,7 @@ import           System.Random
 {-
   Column and row setup: 
   ---------------------
-  |                  |
+  |           C24R24 |
   |                  |
   |         X        |
   |C0R1 C1R1         |
@@ -75,5 +75,5 @@ createPictures tiles = map tileTranslate tiles
 -- | Initialize the game with this game state.
 initialState :: [Picture] -> StdGen -> GameState
 initialState images generator =
-  let startingTiles = generateMap images
+  let startingTiles = generateMap images generator (0, 0)
   in  Game { tiles = startingTiles, effects = [] }
