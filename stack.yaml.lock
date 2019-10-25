@@ -39,6 +39,13 @@ packages:
       sha256: 1a064ebd5371903f8192e0486fa1aff8030acac4e5145088106456c71ef91f2b
   original:
     hackage: streaming-commons-0.1.19
+- completed:
+    hackage: extra-1.6.18@sha256:5f1fff126f0ae47b701fff5aa8462dc63cb44465d5a724b0afd20a3d731903af,2705
+    pantry-tree:
+      size: 1828
+      sha256: 61a764a72012e96ac338622af1dbcd8d7620d5952ccd631fc708fb0c5343494a
+  original:
+    hackage: extra-1.6.18
 snapshots:
 - completed:
     size: 524789

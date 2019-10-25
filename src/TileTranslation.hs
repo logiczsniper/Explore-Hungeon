@@ -10,9 +10,14 @@ import           Numeric.Extra
 calculateTranslation :: Int -> Float
 calculateTranslation number = intToFloat $ 16 * (number + 1) - 416
 
-tileTranslate :: Tile -> Picture
+tileTranslate :: Tile -> Tile
 tileTranslate tile =
-  translate
-    (calculateTranslation $ columnNumber tile)
-    (calculateTranslation $ rowNumber tile) $
-  picture tile
+  Tile
+    { picture =
+        translate
+          (calculateTranslation $ columnNumber tile)
+          (calculateTranslation $ rowNumber tile) $
+        picture tile
+    , columnNumber = columnNumber tile
+    , rowNumber = rowNumber tile
+    }

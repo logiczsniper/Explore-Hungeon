@@ -73,10 +73,10 @@ render game = pictures $ createPictures $ tiles game
 
 createPictures :: TileList -> PictureList
 createPictures []    = []
-createPictures tiles = map tileTranslate tiles
+createPictures tiles = map (\tile -> picture tile) tiles
 
 -- | Initialize the game with this game state.
 initialState :: PictureList -> StdGen -> GameState
 initialState images generator =
-  let startingTiles = generateMap images generator (0, 0) [] 0
+  let startingTiles = generateMap images generator
    in Game {tiles = startingTiles, effects = []}

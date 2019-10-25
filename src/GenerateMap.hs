@@ -2,13 +2,14 @@ module GenerateMap
   ( generateMap
   ) where
 
-import qualified Data.List      as List
-import qualified Data.Map       as Map
+import qualified Data.List       as List
+import qualified Data.Map        as Map
 import           GameTypes
-import           Graphics.Gloss (Picture, blank)
+import           Graphics.Gloss  (Picture, blank)
 import           ImageConstants
 import           ImageFunctions
 import           System.Random
+import           TileTranslation
 
 {-
 STEPS:
@@ -30,31 +31,21 @@ Recursively iterates through all of the columns and rows,
 for each value calling the algorithm function.
 Takes all pictures, the random generator and the current coordinates.
 -}
-{- generateMap :: PictureList -> StdGen -> Coordinates -> TileList
-generateMap images generator current = if current == (24, 24)
-                                              then []
-                                              else let newCoords = nextCoords current
-                                                   in generateMap images generator newCoords -}
-{- TODO: make recursive -}
-{- The function starts with index = 0 and previousTiles = [] -}
-generateMap ::
-     PictureList -> StdGen -> Coordinates -> TileList -> Int -> TileList
-generateMap images generator currentCoords previousTiles index
-  | index < 25 * 25 =
-    let previousTiles =
-          previousTiles ++
-          [nextTile images generator currentCoords previousTiles]
-     in generateMap images generator (nextCoords currentCoords) previousTiles $
-        index + 1
-  | otherwise = previousTiles
+generateMap :: PictureList -> StdGen -> TileList
+generateMap images generator =
+  let startingTile = Tile {picture = blank, columnNumber = -1, rowNumber = -1}
+      allTiles = take (25 * 25) $ iterate (tileGenerator images) startingTile
+   in map tileTranslate allTiles
 
-nextTile :: PictureList -> StdGen -> Coordinates -> TileList -> Tile
-nextTile images generator currentCoords previousTiles =
-  Tile
-    { picture = nextPicture images currentCoords
-    , columnNumber = fst currentCoords
-    , rowNumber = snd currentCoords
-    }
+tileGenerator :: PictureList -> Tile -> Tile
+tileGenerator images previousTile =
+  let newCoords = nextCoords (columnNumber previousTile, rowNumber previousTile)
+      newPicture = nextPicture images newCoords
+   in Tile
+        { picture = newPicture
+        , columnNumber = fst newCoords
+        , rowNumber = snd newCoords
+        }
 
 nextPicture :: PictureList -> Coordinates -> Picture
 nextPicture images currentCoords =
@@ -70,30 +61,24 @@ nextCoords current@(x, y) =
   case current of
     (_, 24) -> (x + 1, 0) -- each time a row is complete, restart in next column.
     (_, _)  -> (x, y + 1) -- otherwise, increment the row number.
-{- generateFloorDimensions :: StdGen -> Coordinates
+    {-   let previousTiles =
+        previousTiles ++ [nextTile images generator currentCoords previousTiles]
+   in generateMap images generator (nextCoords currentCoords) previousTiles -}
+{- The function starts with index = 0 and previousTiles = [] -}
+{- generateMap :: PictureList -> StdGen -> Coordinates -> TileList -> TileList
+generateMap _ _ (24, 24) _ = []
+generateMap images generator (0, 0) previousTiles =
+generateMap images generator currentCoords previousTiles =
+  previousTiles ++
+  generateMap images generator (nextCoords currentCoords) previousTiles -}
+{- nextTile :: PictureList -> StdGen -> Coordinates -> TileList -> Tile
+nextTile images generator currentCoords previousTiles =
+  Tile
+    { picture = nextPicture images currentCoords
+    , columnNumber = fst currentCoords
+    , rowNumber = snd currentCoords
+    } -}
+    {- generateFloorDimensions :: StdGen -> Coordinates
 generateFloorDimensions generator =
     (fst $ randomR (5, 45) generator, fst $ randomR (5, 45) generator)
-
-getBasicFloorImages :: PictureList -> StdGen -> PictureList
-getBasicFloorImages images generator =
-    let dimensions = generateFloorDimensions generator
-    in  createFloorPictures dimensions images
-
-{- Gives you a list of pictures that you need to make the floor -}
-createFloorPictures :: Coordinates -> PictureList -> PictureList
-createFloorPictures dimensions images =
-    [ getPictureFromIndex 14 images
-    , getPictureFromIndex 15 images
-    , getPictureFromIndex 16 images
-    , getPictureFromIndex 17 images
-    ]
-    ++ (List.take (x - 2) $ repeat (getPictureFromIndex 10 images))
-    ++ (List.take (x - 2) $ repeat (getPictureFromIndex 11 images))
-    ++ (List.take (y - 2) $ repeat (getPictureFromIndex 12 images))
-    ++ (List.take (y - 2) $ repeat (getPictureFromIndex 13 images))
-    where   x = fst dimensions
-            y = snd dimensions
-
-createFloorTiles :: PictureList -> TileList
-createFloorTiles floorPictures = []
- -}
+-}
