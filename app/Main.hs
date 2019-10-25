@@ -1,19 +1,19 @@
 module Main where
 
-import           Sound.ProteaAudio
 import           Graphics.Gloss
 import           Graphics.Gloss.Interface.Pure.Game
+import           Sound.ProteaAudio
 
 import           GameTypes
+import           GenerateMap
 import           ImageFunctions
 import           TileTranslation
-import           GenerateMap
 
 import           System.Environment
 import           System.Random
 
 {-
-  Column and row setup: 
+  Column and row setup:
   ---------------------
   |           C24R24 |
   |                  |
@@ -24,30 +24,33 @@ import           System.Random
 
 This is effectively an 800 by 800 grid in terms of
 translation. The bottom left corner would be a translation (-400) (-400),
-and a top right translation 400 400. 
+and a top right translation 400 400.
 
 The translation is calculated via sequence
   Tn = 16n - 416
 where n = row or column number + 1
 -}
-
 main :: IO ()
 main = do
-  images    <- allImages
+  images <- allImages
   generator <- getStdGen
-  play window
-       backgroundColour
-       fps
-       (initialState images generator)
-       render
-       handleEvent
-       update
+  play
+    window
+    backgroundColour
+    fps
+    (initialState images generator)
+    render
+    handleEvent
+    update
 
 -- | Some defining helper main functions. Note: 50 * 50 tiles at 16px each max.
 width, height, offset, fps :: Int
 width = 800
+
 height = 800
+
 offset = 100
+
 fps = 25
 
 window :: Display
@@ -76,4 +79,4 @@ createPictures tiles = map tileTranslate tiles
 initialState :: PictureList -> StdGen -> GameState
 initialState images generator =
   let startingTiles = generateMap images generator (0, 0) [] 0
-  in  Game { tiles = startingTiles, effects = [] }
+   in Game {tiles = startingTiles, effects = []}

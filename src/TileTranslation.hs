@@ -1,7 +1,6 @@
 module TileTranslation
-    ( tileTranslate
-    )
-where
+  ( tileTranslate
+  ) where
 
 import           GameTypes
 import           Graphics.Gloss
@@ -13,6 +12,7 @@ calculateTranslation number = intToFloat $ 16 * (number + 1) - 416
 
 tileTranslate :: Tile -> Picture
 tileTranslate tile =
-    translate (calculateTranslation $ columnNumber tile)
-              (calculateTranslation $ rowNumber tile)
-        $ picture tile
+  translate
+    (calculateTranslation $ columnNumber tile)
+    (calculateTranslation $ rowNumber tile) $
+  picture tile

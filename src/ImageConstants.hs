@@ -1,86 +1,123 @@
 module ImageConstants where
 
-import GameTypes (ImageId)
+import           GameTypes (ImageId)
 
-borderBottom  :: ImageId
-borderBottom                    = 1
-borderTop  :: ImageId
-borderTop                       = 2
+borderBottom :: ImageId
+borderBottom = 1
+
+borderTop :: ImageId
+borderTop = 2
+
 borderRight :: ImageId
-borderRight                     = 3
+borderRight = 3
+
 borderLeft :: ImageId
-borderLeft                      = 4
+borderLeft = 4
+
 borderTopLeft :: ImageId
-borderTopLeft                   = 5
+borderTopLeft = 5
+
 borderTopRight :: ImageId
-borderTopRight                  = 6
+borderTopRight = 6
+
 borderBottomRight :: ImageId
-borderBottomRight               = 7
+borderBottomRight = 7
+
 borderBottomLeft :: ImageId
-borderBottomLeft                = 9
+borderBottomLeft = 9
 
 floorDryBottom :: ImageId
-floorDryBottom                  = 10
+floorDryBottom = 10
+
 floorDryTop :: ImageId
-floorDryTop                     = 11
+floorDryTop = 11
+
 floorDryRight :: ImageId
-floorDryRight                   = 12
+floorDryRight = 12
+
 floorDryLeft :: ImageId
-floorDryLeft                    = 13
+floorDryLeft = 13
+
 floorDryTopLeft :: ImageId
-floorDryTopLeft                 = 14
+floorDryTopLeft = 14
+
 floorDryTopRight :: ImageId
-floorDryTopRight                = 15
+floorDryTopRight = 15
+
 floorDryBottomRight :: ImageId
-floorDryBottomRight             = 16
+floorDryBottomRight = 16
+
 floorDryBottomLeft :: ImageId
-floorDryBottomLeft              = 17
+floorDryBottomLeft = 17
+
 floorDryDoor :: ImageId
-floorDryDoor                    = 18
+floorDryDoor = 18
+
 floorDryPlain :: ImageId
-floorDryPlain                   = 19
+floorDryPlain = 19
+
 floorWetBottom :: ImageId
-floorWetBottom                  = 20
+floorWetBottom = 20
+
 floorWetTop :: ImageId
-floorWetTop                     = 21
+floorWetTop = 21
+
 floorWetRight :: ImageId
-floorWetRight                   = 22
+floorWetRight = 22
+
 floorWetLeft :: ImageId
-floorWetLeft                    = 23
+floorWetLeft = 23
+
 floorWetTopLeft :: ImageId
-floorWetTopLeft                 = 24
+floorWetTopLeft = 24
+
 floorWetTopRight :: ImageId
-floorWetTopRight                = 25
+floorWetTopRight = 25
+
 floorWetBottomRight :: ImageId
-floorWetBottomRight             = 26
+floorWetBottomRight = 26
+
 floorWetBottomLeft :: ImageId
-floorWetBottomLeft              = 27
+floorWetBottomLeft = 27
+
 floorWetPlain :: ImageId
-floorWetPlain                   = 28
+floorWetPlain = 28
+
 floorPlantsOne :: ImageId
-floorPlantsOne                  = 29
+floorPlantsOne = 29
+
 floorPlantsTwo :: ImageId
-floorPlantsTwo                  = 30
+floorPlantsTwo = 30
+
 floorPlantsThree :: ImageId
-floorPlantsThree                = 31
+floorPlantsThree = 31
 
 wallSecretClosed :: ImageId
-wallSecretClosed                = 32
+wallSecretClosed = 32
+
 wallSecretCracked :: ImageId
-wallSecretCracked               = 33
+wallSecretCracked = 33
+
 wallSecretOpen :: ImageId
-wallSecretOpen                  = 34
+wallSecretOpen = 34
+
 wallStandardBoarded :: ImageId
-wallStandardBoarded             = 35
+wallStandardBoarded = 35
+
 wallStandardDoor :: ImageId
-wallStandardDoor                = 36
+wallStandardDoor = 36
+
 wallStandardFancy :: ImageId
-wallStandardFancy               = 37
+wallStandardFancy = 37
+
 wallStandardPlain :: ImageId
-wallStandardPlain               = 38
+wallStandardPlain = 38
+
 wallPlantsOne :: ImageId
-wallPlantsOne                   = 39
+wallPlantsOne = 39
+
 wallPlantsTwo :: ImageId
-wallPlantsTwo                   = 40
+wallPlantsTwo = 40
+
 wallPlantsThree :: ImageId
-wallPlantsThree                 = 41
+wallPlantsThree = 41
