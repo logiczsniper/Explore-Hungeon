@@ -3,10 +3,11 @@ module GenerateMap
     )
 where
 
-import           Graphics.Gloss                 ( Picture )
+import           Graphics.Gloss                 ( Picture, blank)
 import           GameTypes                      
 import           System.Random
 import           ImageFunctions
+import           ImageConstants
 import qualified Data.List                      as  List
 import qualified Data.Map                       as  Map
 
@@ -31,29 +32,38 @@ Recursively iterates through all of the columns and rows,
 for each value calling the algorithm function.
 Takes all pictures, the random generator and the current coordinates.
 -}
-generateMap :: PictureList -> StdGen -> Coordinates -> TileList
+{- generateMap :: PictureList -> StdGen -> Coordinates -> TileList
 generateMap images generator current = if current == (24, 24)
                                               then []
                                               else let newCoords = nextCoords current
-                                                   in generateMap images generator newCoords
+                                                   in generateMap images generator newCoords -}
+
+{- TODO: make recursive -}
+
+{- The function starts with index = 0 and previousTiles = [] -}
+generateMap :: PictureList -> StdGen -> Coordinates -> TileList -> Int -> TileList
+generateMap images generator currentCoords previousTiles index 
+    | index < 25 * 25   =   let previousTiles = previousTiles ++ [nextTile images generator currentCoords previousTiles]
+                            in generateMap images generator currentCoords previousTiles $ index + 1
+    | otherwise         = previousTiles
+                                                
 
 nextTile :: PictureList -> StdGen -> Coordinates -> TileList -> Tile
-nextTile images generator currentCoords previousTiles = if currentCoords == (0, 0) && elem (nextProbability generator) [1..4]    -- There is a 40% chance of this.
-                                                        then Tile { picture = images !! 0
-                                                                  , columnNumber = fst currentCoords
-                                                                  , rowNumber = snd currentCoords
-                                                                  }
-                                                        else Tile { picture = images !! 0
-                                                                  , columnNumber = fst currentCoords
-                                                                  , rowNumber = snd currentCoords
-                                                                  }                                                    
+nextTile images generator currentCoords previousTiles = Tile    { picture = nextPicture images currentCoords
+                                                                , columnNumber = fst currentCoords
+                                                                , rowNumber = snd currentCoords
+                                                                }
+
+nextPicture :: PictureList -> Coordinates -> Picture
+nextPicture images currentCoords = case currentCoords of
+    (0, 0)  -> getPictureFromIndex borderTopRight images
+    _       -> blank
 
 nextProbability :: StdGen -> Int
 nextProbability generator = fst $ randomR (1, 10) generator
 
 nextCoords :: Coordinates -> Coordinates
-nextCoords current@(x, y) = case current of 
-                                (24, 24) -> (25, 25)    -- If this is returned, STOP recursion!
+nextCoords current@(x, y) = case current of   -- If this is returned, STOP recursion!
                                 (_, 24) -> (x + 1, 0)   -- each time a row is complete, restart in next column.
                                 (_, _) -> (x, y + 1)    -- otherwise, increment the row number.
 

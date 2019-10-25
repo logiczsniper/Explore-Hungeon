@@ -19,11 +19,15 @@ data Tile = Tile
   , rowNumber :: Int
   } deriving Show
 
-data ImagePath = ImagePath
-  { path :: String
-    , imageId :: Int
+data ImageHolder = ImageHolder
+  { path :: ImagePath
+    , imageId :: ImageId
   } deriving Show
 
 type Coordinates = (Int, Int)
 type TileList = [Tile]
 type PictureList = [Picture]
+type Width = Int
+type Length = Int
+type ImagePath = String
+type ImageId = Int

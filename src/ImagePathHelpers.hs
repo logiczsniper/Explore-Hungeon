@@ -5,7 +5,9 @@ module ImagePathHelpers
   )
 where
 
-newPath :: String -> String -> String
+import GameTypes (ImagePath)
+
+newPath :: ImagePath -> ImagePath -> ImagePath
 newPath subDirectory name =
   "C:/Users/lczer/Desktop/Projects/HaskellGame/Explore/app/assets/images/"
     ++ subDirectory
@@ -13,11 +15,11 @@ newPath subDirectory name =
     ++ name
     ++ ".bmp"
 
-borderPath :: String -> String
+borderPath :: ImagePath -> ImagePath
 borderPath = newPath "borders"
 
-floorPath :: String -> String
+floorPath :: ImagePath -> ImagePath
 floorPath = newPath "floors"
 
-wallPath :: String -> String
+wallPath :: ImagePath -> ImagePath
 wallPath = newPath "walls"

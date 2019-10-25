@@ -68,12 +68,12 @@ update time initState = initState
 render :: GameState -> Picture
 render game = pictures $ createPictures $ tiles game
 
-createPictures :: [Tile] -> [Picture]
+createPictures :: TileList -> PictureList
 createPictures []    = []
 createPictures tiles = map tileTranslate tiles
 
 -- | Initialize the game with this game state.
-initialState :: [Picture] -> StdGen -> GameState
+initialState :: PictureList -> StdGen -> GameState
 initialState images generator =
-  let startingTiles = generateMap images generator (0, 0)
+  let startingTiles = generateMap images generator (0, 0) [] 0
   in  Game { tiles = startingTiles, effects = [] }
