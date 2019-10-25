@@ -52,10 +52,10 @@ imagePaths =
     , buildImagePath (wallPath "plants/three")     41
     ]
 
-allImages :: IO [Picture]
+allImages :: IO PictureList
 allImages = mapM loadBMP $ map path imagePaths
 
-getPictureFromIndex :: Int -> [Picture] -> Picture
+getPictureFromIndex :: Int -> PictureList -> Picture
 getPictureFromIndex index images = images !! index
 
 buildImagePath :: String -> Int -> ImagePath

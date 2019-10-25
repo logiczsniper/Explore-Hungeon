@@ -47,6 +47,7 @@ extra-deps:
   - conduit-extra-1.1.17
   - resourcet-1.1.11
   - streaming-commons-0.1.19
+  - extra-1.6.18
 # Override default flag values for local packages and extra-deps
 # flags: {}
 

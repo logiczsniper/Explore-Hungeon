@@ -10,16 +10,20 @@ data GameState = Game
 
 data Effect = Effect
   { frames :: [Picture]
-    , frameCount :: Integer
+    , frameCount :: Int
   } deriving Show
 
 data Tile = Tile
   { picture :: Picture
-  , columnNumber :: Integer
-  , rowNumber :: Integer
+  , columnNumber :: Int
+  , rowNumber :: Int
   } deriving Show
 
 data ImagePath = ImagePath
   { path :: String
     , imageId :: Int
   } deriving Show
+
+type Coordinates = (Int, Int)
+type TileList = [Tile]
+type PictureList = [Picture]
