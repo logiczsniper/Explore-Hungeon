@@ -36,7 +36,8 @@ generateMap :: PictureList -> StdGen -> TileList
 generateMap images generator =
   let startingTile = Tile {picture = blank, columnNumber = 0, rowNumber = -1}
       allTiles =
-        take (25 * 25) $ iterate (tileGenerator images generator) startingTile
+        take (25 * 25 + 1) $
+        iterate (tileGenerator images generator) startingTile
    in map tileTranslate allTiles
 
 tileGenerator :: PictureList -> StdGen -> Tile -> Tile

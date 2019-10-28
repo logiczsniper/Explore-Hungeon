@@ -24,100 +24,100 @@ borderBottomRight :: ImageId
 borderBottomRight = 7
 
 borderBottomLeft :: ImageId
-borderBottomLeft = 9
+borderBottomLeft = 8
 
 floorDryBottom :: ImageId
-floorDryBottom = 10
+floorDryBottom = 9
 
 floorDryTop :: ImageId
-floorDryTop = 11
+floorDryTop = 10
 
 floorDryRight :: ImageId
-floorDryRight = 12
+floorDryRight = 11
 
 floorDryLeft :: ImageId
-floorDryLeft = 13
+floorDryLeft = 12
 
 floorDryTopLeft :: ImageId
-floorDryTopLeft = 14
+floorDryTopLeft = 13
 
 floorDryTopRight :: ImageId
-floorDryTopRight = 15
+floorDryTopRight = 14
 
 floorDryBottomRight :: ImageId
-floorDryBottomRight = 16
+floorDryBottomRight = 15
 
 floorDryBottomLeft :: ImageId
-floorDryBottomLeft = 17
+floorDryBottomLeft = 16
 
 floorDryDoor :: ImageId
-floorDryDoor = 18
+floorDryDoor = 17
 
 floorDryPlain :: ImageId
-floorDryPlain = 19
+floorDryPlain = 18
 
 floorWetBottom :: ImageId
-floorWetBottom = 20
+floorWetBottom = 19
 
 floorWetTop :: ImageId
-floorWetTop = 21
+floorWetTop = 20
 
 floorWetRight :: ImageId
-floorWetRight = 22
+floorWetRight = 21
 
 floorWetLeft :: ImageId
-floorWetLeft = 23
+floorWetLeft = 22
 
 floorWetTopLeft :: ImageId
-floorWetTopLeft = 24
+floorWetTopLeft = 23
 
 floorWetTopRight :: ImageId
-floorWetTopRight = 25
+floorWetTopRight = 24
 
 floorWetBottomRight :: ImageId
-floorWetBottomRight = 26
+floorWetBottomRight = 25
 
 floorWetBottomLeft :: ImageId
-floorWetBottomLeft = 27
+floorWetBottomLeft = 26
 
 floorWetPlain :: ImageId
-floorWetPlain = 28
+floorWetPlain = 27
 
 floorPlantsOne :: ImageId
-floorPlantsOne = 29
+floorPlantsOne = 28
 
 floorPlantsTwo :: ImageId
-floorPlantsTwo = 30
+floorPlantsTwo = 29
 
 floorPlantsThree :: ImageId
-floorPlantsThree = 31
+floorPlantsThree = 30
 
 wallSecretClosed :: ImageId
-wallSecretClosed = 32
+wallSecretClosed = 31
 
 wallSecretCracked :: ImageId
-wallSecretCracked = 33
+wallSecretCracked = 32
 
 wallSecretOpen :: ImageId
-wallSecretOpen = 34
+wallSecretOpen = 33
 
 wallStandardBoarded :: ImageId
-wallStandardBoarded = 35
+wallStandardBoarded = 34
 
 wallStandardDoor :: ImageId
-wallStandardDoor = 36
+wallStandardDoor = 35
 
 wallStandardFancy :: ImageId
-wallStandardFancy = 37
+wallStandardFancy = 36
 
 wallStandardPlain :: ImageId
-wallStandardPlain = 38
+wallStandardPlain = 37
 
 wallPlantsOne :: ImageId
-wallPlantsOne = 39
+wallPlantsOne = 38
 
 wallPlantsTwo :: ImageId
-wallPlantsTwo = 40
+wallPlantsTwo = 39
 
 wallPlantsThree :: ImageId
-wallPlantsThree = 41
+wallPlantsThree = 40
