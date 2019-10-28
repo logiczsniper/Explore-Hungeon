@@ -5,9 +5,10 @@ module GenerateMap
 import qualified Data.List       as List
 import qualified Data.Map        as Map
 import           GameTypes
-import           Graphics.Gloss  (Picture, blank)
+import           Graphics.Gloss  (Picture, blank, pictures)
 import           ImageConstants
 import           ImageFunctions
+import           Probability
 import           System.Random
 import           TileTranslation
 
@@ -33,52 +34,43 @@ Takes all pictures, the random generator and the current coordinates.
 -}
 generateMap :: PictureList -> StdGen -> TileList
 generateMap images generator =
-  let startingTile = Tile {picture = blank, columnNumber = -1, rowNumber = -1}
-      allTiles = take (25 * 25) $ iterate (tileGenerator images) startingTile
+  let startingTile = Tile {picture = blank, columnNumber = 0, rowNumber = -1}
+      allTiles =
+        take (25 * 25) $ iterate (tileGenerator images generator) startingTile
    in map tileTranslate allTiles
 
-tileGenerator :: PictureList -> Tile -> Tile
-tileGenerator images previousTile =
+tileGenerator :: PictureList -> StdGen -> Tile -> Tile
+tileGenerator images generator previousTile =
   let newCoords = nextCoords (columnNumber previousTile, rowNumber previousTile)
-      newPicture = nextPicture images newCoords
+      newPicture = nextPicture images newCoords generator
    in Tile
         { picture = newPicture
         , columnNumber = fst newCoords
         , rowNumber = snd newCoords
         }
 
-nextPicture :: PictureList -> Coordinates -> Picture
-nextPicture images currentCoords =
+nextPicture :: PictureList -> Coordinates -> StdGen -> Picture
+nextPicture images currentCoords@(x, y) generator =
   case currentCoords of
     (0, 0) -> getPictureFromConstant borderTopRight images
-    _      -> blank
-
-nextProbability :: StdGen -> Int
-nextProbability generator = fst $ randomR (1, 10) generator
+    (0, 24) -> getPictureFromConstant borderBottomRight images
+    (1, 0) -> getPictureFromConstant borderTop images
+    (1, 1) ->
+      let floorType = setFloor generator
+       in if floorType == Dry
+            then getPictureFromConstant floorDryBottomLeft images
+            else getPictureFromConstant floorWetBottomLeft images
+    (_, _) ->
+      if x >= 1 && x <= 23
+        then getPictureFromConstant borderRight images
+              {- else if  -}
+        else blank
 
 nextCoords :: Coordinates -> Coordinates
 nextCoords current@(x, y) =
   case current of
     (_, 24) -> (x + 1, 0) -- each time a row is complete, restart in next column.
     (_, _)  -> (x, y + 1) -- otherwise, increment the row number.
-    {-   let previousTiles =
-        previousTiles ++ [nextTile images generator currentCoords previousTiles]
-   in generateMap images generator (nextCoords currentCoords) previousTiles -}
-{- The function starts with index = 0 and previousTiles = [] -}
-{- generateMap :: PictureList -> StdGen -> Coordinates -> TileList -> TileList
-generateMap _ _ (24, 24) _ = []
-generateMap images generator (0, 0) previousTiles =
-generateMap images generator currentCoords previousTiles =
-  previousTiles ++
-  generateMap images generator (nextCoords currentCoords) previousTiles -}
-{- nextTile :: PictureList -> StdGen -> Coordinates -> TileList -> Tile
-nextTile images generator currentCoords previousTiles =
-  Tile
-    { picture = nextPicture images currentCoords
-    , columnNumber = fst currentCoords
-    , rowNumber = snd currentCoords
-    } -}
-    {- generateFloorDimensions :: StdGen -> Coordinates
-generateFloorDimensions generator =
-    (fst $ randomR (5, 45) generator, fst $ randomR (5, 45) generator)
--}
+
+setFloor :: StdGen -> FloorType
+setFloor generator = floorsProbability generator
