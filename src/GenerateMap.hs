@@ -54,17 +54,27 @@ nextPicture images currentCoords@(x, y) generator =
   case currentCoords of
     (0, 0) -> getPictureFromConstant borderTopRight images
     (0, 24) -> getPictureFromConstant borderBottomRight images
-    (1, 0) -> getPictureFromConstant borderTop images
-    (1, 1) ->
-      let floorType = setFloor generator
-       in if floorType == Dry
-            then getPictureFromConstant floorDryBottomLeft images
-            else getPictureFromConstant floorWetBottomLeft images
+    (24, 0) -> getPictureFromConstant borderTopLeft images
+    (24, 24) -> getPictureFromConstant borderBottomLeft images
     (_, _) ->
-      if x >= 1 && x <= 23
+      if y > 0 && y < 24 && x == 0
         then getPictureFromConstant borderRight images
-              {- else if  -}
-        else blank
+        else if y > 0 && y < 24 && x == 24
+               then getPictureFromConstant borderLeft images
+               else if x > 0 && x < 24 && y == 0
+                      then getPictureFromConstant borderTop images
+                      else if x > 0 && x < 24 && y == 24
+                             then getPictureFromConstant borderBottom images
+                             else if x > 1 && x < 23 && y > 1 && y < 23
+                                    then let floorType = setFloor generator
+                                          in if floorType == Dry
+                                               then getPictureFromConstant
+                                                      floorDryBottomLeft
+                                                      images
+                                               else getPictureFromConstant
+                                                      floorWetBottomLeft
+                                                      images
+                                    else blank
 
 nextCoords :: Coordinates -> Coordinates
 nextCoords current@(x, y) =
