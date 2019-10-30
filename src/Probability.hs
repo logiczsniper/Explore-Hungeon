@@ -1,5 +1,6 @@
 module Probability
   ( floorsProbability
+  , nextProbability
   ) where
 
 import           GameTypes
