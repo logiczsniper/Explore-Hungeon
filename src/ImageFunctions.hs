@@ -1,6 +1,6 @@
 module ImageFunctions
   ( allImages
-  , getPictureFromConstant
+  , getImage
   ) where
 
 import           GameTypes
@@ -41,6 +41,5 @@ imagePaths =
 allImages :: IO PictureList
 allImages = mapM loadBMP imagePaths
 
-getPictureFromConstant :: Int -> PictureList -> Degrees -> Picture
-getPictureFromConstant index images rotation =
-  rotate rotation (images !! (index))
+getImage :: Int -> PictureList -> Degrees -> Picture
+getImage index images rotation = rotate rotation (images !! (index))

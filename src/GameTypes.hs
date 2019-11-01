@@ -1,7 +1,6 @@
 module GameTypes where
 
 import           Graphics.Gloss
- -- | A data structure to hold the state of the game.
 
 data GameState =
   Game
@@ -30,10 +29,6 @@ type Coordinates = (Int, Int)
 type TileList = [Tile]
 
 type PictureList = [Picture]
-
-type Width = Int
-
-type Length = Int
 
 type ImagePath = String
 
