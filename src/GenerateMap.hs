@@ -41,7 +41,7 @@ generateMap images generator =
       allTiles =
         take (25 * 25 + 1) $
         iterate (tileGenerator images generator floorTile) startingTile
-   in map tileRotate $ map tileTranslate allTiles
+   in map tileTranslate $ map tileRotate allTiles
 
 tileGenerator :: PictureList -> StdGen -> FloorType -> Tile -> Tile
 tileGenerator images generator floorTile previousTile =
