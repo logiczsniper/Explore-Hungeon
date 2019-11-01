@@ -22,14 +22,6 @@ data Tile =
     { picture      :: Picture
     , columnNumber :: Int
     , rowNumber    :: Int
-    , rotation     :: Degrees
-    }
-  deriving (Show)
-
-data ImageHolder =
-  ImageHolder
-    { path    :: ImagePath
-    , imageId :: ImageId
     }
   deriving (Show)
 

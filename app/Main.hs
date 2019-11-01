@@ -7,7 +7,6 @@ import           Sound.ProteaAudio
 import           GameTypes
 import           GenerateMap
 import           ImageFunctions
-import           TileTranslation
 
 import           System.Environment
 import           System.Random

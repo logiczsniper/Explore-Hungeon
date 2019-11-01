@@ -1,5 +1,5 @@
-module TileTranslation
-  ( tileTranslate
+module TileAdjust
+  ( tileAdjust
   ) where
 
 import           GameTypes
@@ -10,8 +10,8 @@ import           Numeric.Extra
 calculateTranslation :: Int -> Float
 calculateTranslation number = intToFloat $ 16 * (number + 1) - 416
 
-tileTranslate :: Tile -> Tile
-tileTranslate tile =
+tileAdjust :: Tile -> Tile
+tileAdjust tile =
   Tile
     { picture =
         translate
@@ -20,5 +20,4 @@ tileTranslate tile =
         picture tile
     , columnNumber = columnNumber tile
     , rowNumber = rowNumber tile
-    , rotation = rotation tile
     }

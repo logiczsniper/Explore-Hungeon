@@ -2,16 +2,15 @@ module GenerateMap
   ( generateMap
   ) where
 
-import qualified Data.List       as List
-import qualified Data.Map        as Map
+import qualified Data.List      as List
+import qualified Data.Map       as Map
 import           GameTypes
-import           Graphics.Gloss  (Picture, blank, pictures)
+import           Graphics.Gloss (Picture, blank, pictures)
 import           ImageConstants
 import           ImageFunctions
 import           Probability
 import           System.Random
-import           TileRotation
-import           TileTranslation
+import           TileAdjust
 
 {-
 STEPS:
@@ -35,62 +34,63 @@ Takes all pictures, the random generator and the current coordinates.
 -}
 generateMap :: PictureList -> StdGen -> TileList
 generateMap images generator =
-  let startingTile =
-        Tile {picture = blank, columnNumber = 0, rowNumber = -1, rotation = 0}
+  let startingTile = Tile {picture = blank, columnNumber = 0, rowNumber = -1}
       floorTile = setFloor generator
       allTiles =
         take (25 * 25 + 1) $
         iterate (tileGenerator images generator floorTile) startingTile
-   in map tileTranslate $ map tileRotate allTiles
+   in map tileAdjust allTiles
 
 tileGenerator :: PictureList -> StdGen -> FloorType -> Tile -> Tile
 tileGenerator images generator floorTile previousTile =
   let newCoords = nextCoords (columnNumber previousTile, rowNumber previousTile)
       newPicture = nextPicture images newCoords generator floorTile
-      newRotation = getRotationFromPicture newPicture images
    in Tile
         { picture = newPicture
         , columnNumber = fst newCoords
         , rowNumber = snd newCoords
-        , rotation = newRotation
         }
 
 nextPicture :: PictureList -> Coordinates -> StdGen -> FloorType -> Picture
 nextPicture images currentCoords@(x, y) generator floorTile =
   case currentCoords of
-    (0, 0) -> getPictureFromConstant borderTopRight images
-    (0, 24) -> getPictureFromConstant borderBottomRight images
-    (24, 0) -> getPictureFromConstant borderTopLeft images
-    (24, 24) -> getPictureFromConstant borderBottomLeft images
+    (0, 0) -> getPictureFromConstant borderCorner images 180
+    (0, 24) -> getPictureFromConstant borderCorner images 270
+    (24, 0) -> getPictureFromConstant borderCorner images 90
+    (24, 24) -> getPictureFromConstant borderCorner images 0
     (1, 22)
-      | floorTile == Dry -> getPictureFromConstant floorDryTopLeft images
-      | otherwise -> getPictureFromConstant floorWetTopLeft images
+      | floorTile == Dry ->
+        getPictureFromConstant floorDryCornerRight images 180
+      | otherwise -> getPictureFromConstant floorWetCornerRight images 180
     (23, 22)
-      | floorTile == Dry -> getPictureFromConstant floorDryTopRight images
-      | otherwise -> getPictureFromConstant floorWetTopRight images
+      | floorTile == Dry -> getPictureFromConstant floorDryCornerLeft images 180
+      | otherwise -> getPictureFromConstant floorWetCornerLeft images 180
     (_, _)
-      | y > 0 && y < 24 && x == 0 -> getPictureFromConstant borderRight images
-      | y > 0 && y < 24 && x == 24 -> getPictureFromConstant borderLeft images
-      | x > 0 && x < 24 && y == 0 -> getPictureFromConstant borderTop images
-      | x > 0 && x < 24 && y == 24 -> getPictureFromConstant borderBottom images
+      | y > 0 && y < 24 && x == 0 -> getPictureFromConstant borderSide images 0
+      | y > 0 && y < 24 && x == 24 ->
+        getPictureFromConstant borderSide images 180
+      | x > 0 && x < 24 && y == 0 ->
+        getPictureFromConstant borderSide images 270
+      | x > 0 && x < 24 && y == 24 ->
+        getPictureFromConstant borderSide images 90
       | x > 0 && x < 24 && y == 23 ->
-        getPictureFromConstant wallStandardPlain images
+        getPictureFromConstant wallStandardPlain images 0
       | x == 1 && y > 0 && y < 22 ->
         case floorTile of
-          Dry       -> getPictureFromConstant floorDryLeft images
-          otherwise -> getPictureFromConstant floorWetLeft images
+          Dry       -> getPictureFromConstant floorDryHorizontal images 180
+          otherwise -> getPictureFromConstant floorWetHorizontal images 180
       | x == 23 && y > 0 && y < 22 ->
         case floorTile of
-          Dry       -> getPictureFromConstant floorDryRight images
-          otherwise -> getPictureFromConstant floorWetRight images
+          Dry       -> getPictureFromConstant floorDryHorizontal images 0
+          otherwise -> getPictureFromConstant floorWetHorizontal images 0
       | y == 22 && x > 1 && x < 23 ->
         case floorTile of
-          Dry       -> getPictureFromConstant floorDryTop images
-          otherwise -> getPictureFromConstant floorWetTop images
+          Dry       -> getPictureFromConstant floorDryVertical images 0
+          otherwise -> getPictureFromConstant floorWetVertical images 0
       | x > 1 && x < 23 && y >= 1 && y < 22 && floorTile == Dry ->
         pickNextFloorTile images generator
-      | x > 1 && x < 23 && y > 1 && y < 22 && floorTile == Wet ->
-        getPictureFromConstant floorWetPlain images
+      | x > 1 && x < 23 && y >= 1 && y < 22 && floorTile == Wet ->
+        getPictureFromConstant floorWetPlain images 0
       | otherwise -> blank
 
 nextCoords :: Coordinates -> Coordinates
@@ -103,15 +103,15 @@ pickNextFloorTile :: PictureList -> StdGen -> Picture
 pickNextFloorTile images generator =
   let probability = nextProbability generator 40
    in case probability of
-        1 -> getPictureFromConstant floorDryDoor images
+        1 -> getPictureFromConstant floorDryDoor images 0
         _
           | elem probability [2 .. 5] ->
-            getPictureFromConstant floorPlantsOne images
+            getPictureFromConstant floorPlantsOne images 0
           | elem probability [6 .. 9] ->
-            getPictureFromConstant floorPlantsTwo images
+            getPictureFromConstant floorPlantsTwo images 0
           | elem probability [10 .. 13] ->
-            getPictureFromConstant floorPlantsThree images
-          | otherwise -> getPictureFromConstant floorDryPlain images
+            getPictureFromConstant floorPlantsThree images 0
+          | otherwise -> getPictureFromConstant floorDryPlain images 0
 
 setFloor :: StdGen -> FloorType
 setFloor generator = floorsProbability generator
