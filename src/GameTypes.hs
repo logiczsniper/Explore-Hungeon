@@ -22,6 +22,7 @@ data Tile =
     { picture      :: Picture
     , columnNumber :: Int
     , rowNumber    :: Int
+    , rotation     :: Degrees
     }
   deriving (Show)
 
@@ -45,6 +46,8 @@ type Length = Int
 type ImagePath = String
 
 type ImageId = Int
+
+type Degrees = Float
 
 data FloorType
   = Dry

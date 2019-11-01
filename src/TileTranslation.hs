@@ -20,4 +20,5 @@ tileTranslate tile =
         picture tile
     , columnNumber = columnNumber tile
     , rowNumber = rowNumber tile
+    , rotation = rotation tile
     }

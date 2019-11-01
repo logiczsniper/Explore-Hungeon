@@ -10,6 +10,7 @@ import           ImageConstants
 import           ImageFunctions
 import           Probability
 import           System.Random
+import           TileRotation
 import           TileTranslation
 
 {-
@@ -34,21 +35,24 @@ Takes all pictures, the random generator and the current coordinates.
 -}
 generateMap :: PictureList -> StdGen -> TileList
 generateMap images generator =
-  let startingTile = Tile {picture = blank, columnNumber = 0, rowNumber = -1}
+  let startingTile =
+        Tile {picture = blank, columnNumber = 0, rowNumber = -1, rotation = 0}
       floorTile = setFloor generator
       allTiles =
         take (25 * 25 + 1) $
         iterate (tileGenerator images generator floorTile) startingTile
-   in map tileTranslate allTiles
+   in map tileRotate $ map tileTranslate allTiles
 
 tileGenerator :: PictureList -> StdGen -> FloorType -> Tile -> Tile
 tileGenerator images generator floorTile previousTile =
   let newCoords = nextCoords (columnNumber previousTile, rowNumber previousTile)
       newPicture = nextPicture images newCoords generator floorTile
+      newRotation = getRotationFromPicture newPicture images
    in Tile
         { picture = newPicture
         , columnNumber = fst newCoords
         , rowNumber = snd newCoords
+        , rotation = newRotation
         }
 
 nextPicture :: PictureList -> Coordinates -> StdGen -> FloorType -> Picture
