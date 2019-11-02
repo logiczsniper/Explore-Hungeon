@@ -6,12 +6,12 @@ module Probability
 import           GameTypes
 import           System.Random
 
-floorsProbability :: StdGen -> FloorType
-floorsProbability generator =
-  let tst = nextProbability generator 10
-   in if elem tst [1 .. 8]
+floorsProbability :: RandomList -> FloorType
+floorsProbability randomList =
+  let value = randomList !! 0
+   in if elem value [0 .. 68]
         then Dry
         else Wet
 
-nextProbability :: StdGen -> Int -> Int
-nextProbability generator bound = fst $ randomR (1, bound) generator
+nextProbability :: RandomList -> Coordinates -> Int
+nextProbability randomList coordinates@(x, y) = randomList !! (x * 10 + y)

@@ -37,18 +37,18 @@ main = do
     window
     backgroundColour
     fps
-    (initialState images generator)
+    (initialState images $ randomRs (0, 99) generator)
     render
     handleEvent
     update
 
 -- | Some defining helper main functions. Note: 50 * 50 tiles at 16px each max.
 width, height, offset, fps :: Int
-width = 800
+width = 600
 
-height = 800
+height = 600
 
-offset = 100
+offset = 0
 
 fps = 25
 
@@ -75,7 +75,7 @@ createPictures []    = []
 createPictures tiles = map (\tile -> picture tile) tiles
 
 -- | Initialize the game with this game state.
-initialState :: PictureList -> StdGen -> GameState
-initialState images generator =
-  let startingTiles = generateMap images generator
+initialState :: PictureList -> RandomList -> GameState
+initialState images randomList =
+  let startingTiles = generateMap images randomList
    in Game {tiles = startingTiles, effects = []}

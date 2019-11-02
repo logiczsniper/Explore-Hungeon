@@ -30,6 +30,8 @@ type TileList = [Tile]
 
 type PictureList = [Picture]
 
+type RandomList = [Int]
+
 type ImagePath = String
 
 type ImageId = Int

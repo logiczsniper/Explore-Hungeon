@@ -14,6 +14,7 @@ tileAdjust :: Tile -> Tile
 tileAdjust tile =
   Tile
     { picture =
+        translate 200 200 $
         translate
           (calculateTranslation $ columnNumber tile)
           (calculateTranslation $ rowNumber tile) $
