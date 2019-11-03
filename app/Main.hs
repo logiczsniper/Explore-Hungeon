@@ -44,9 +44,9 @@ main = do
 
 -- | Some defining helper main functions. Note: 50 * 50 tiles at 16px each max.
 width, height, offset, fps :: Int
-width = 600
+width = 700
 
-height = 600
+height = 700
 
 offset = 0
 

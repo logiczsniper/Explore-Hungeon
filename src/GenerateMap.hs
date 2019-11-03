@@ -16,73 +16,112 @@ generateMap :: PictureList -> RandomList -> TileList
 generateMap images randomList =
   let startingTile = Tile {picture = blank, columnNumber = 0, rowNumber = -1}
       floorTile = floorsProbability randomList
+      gameWidth = fst $ nextDimensions randomList
+      gameLength = snd $ nextDimensions randomList
       allTiles =
-        take (25 * 25 + 1) $
-        iterate (tileGenerator images randomList floorTile) startingTile
+        takeWhile checkTile $
+        iterate
+          (tileGenerator images randomList floorTile (gameWidth, gameLength))
+          startingTile
    in map tileAdjust allTiles
 
-tileGenerator :: PictureList -> RandomList -> FloorType -> Tile -> Tile
-tileGenerator images randomList floorTile previousTile =
-  let newCoords = nextCoords (columnNumber previousTile, rowNumber previousTile)
-      newPicture = nextPicture images newCoords randomList floorTile
+checkTile :: Tile -> Bool
+checkTile tile =
+  if picture tile == blank && rowNumber tile /= -1
+    then False
+    else True
+
+tileGenerator ::
+     PictureList -> RandomList -> FloorType -> Dimensions -> Tile -> Tile
+tileGenerator images randomList floorTile dimensions@(_, gameLength) previousTile =
+  let newCoords =
+        nextCoords
+          (columnNumber previousTile, rowNumber previousTile)
+          gameLength
+      newPicture = nextPicture images newCoords randomList floorTile dimensions
    in Tile
         { picture = newPicture
         , columnNumber = fst newCoords
         , rowNumber = snd newCoords
         }
 
-nextPicture :: PictureList -> Coordinates -> RandomList -> FloorType -> Picture
-nextPicture images currentCoords@(x, y) randomList floorTile =
+nextPicture ::
+     PictureList
+  -> Coordinates
+  -> RandomList
+  -> FloorType
+  -> Dimensions
+  -> Picture
+nextPicture images currentCoords@(x, y) randomList floorTile (gW, gL) =
   case currentCoords of
-    (0, 0) -> getImage borderCorner images 180
-    (0, 24) -> getImage borderCorner images 270
-    (24, 0) -> getImage borderCorner images 90
-    (24, 24) -> getImage borderCorner images 0
-    (1, 1)
-      | floorTile == Dry -> getImage floorDryCornerLeft images 0
-      | otherwise -> getImage floorWetCornerLeft images 0
-    (1, 22)
-      | floorTile == Dry -> getImage floorDryCornerRight images 180
-      | otherwise -> getImage floorWetCornerRight images 180
-    (23, 1)
-      | floorTile == Dry -> getImage floorDryCornerRight images 0
-      | otherwise -> getImage floorWetCornerRight images 0
-    (23, 22)
-      | floorTile == Dry -> getImage floorDryCornerLeft images 180
-      | otherwise -> getImage floorWetCornerLeft images 180
     (_, _)
-      | y > 0 && y < 24 && x == 0 -> getImage borderSide images 0
-      | y > 0 && y < 24 && x == 24 -> getImage borderSide images 180
-      | x > 0 && x < 24 && y == 0 -> getImage borderSide images 270
-      | x > 0 && x < 24 && y == 24 -> getImage borderSide images 90
-      | x > 0 && x < 24 && y == 23 -> nextWall images randomList currentCoords
-      | x == 1 && y > 1 && y < 22 ->
+      -- Border Corners
+      | x == 0 && y == 0 -> getImage borderCorner images 180
+      | x == 0 && y == gL -> getImage borderCorner images 270
+      | x == gW && y == 0 -> getImage borderCorner images 90
+      | x == gW && y == gL -> getImage borderCorner images 0
+      -- Border Sides
+      | x == 0 && y > 0 && y < gL -> getImage borderSide images 0
+      | x == gW && y > 0 && y < gL -> getImage borderSide images 180
+      | y == 0 && x > 0 && x < gW -> getImage borderSide images 270
+      | y == gL && x > 0 && x < gW -> getImage borderSide images 90
+      -- Walls
+      | x > 0 && x < gW && y == sgL -> nextWall images randomList currentCoords
+      -- Floor Corners
+      | x == 1 && y == 1 ->
+        if floorTile == Dry
+          then getImage floorDryCornerLeft images 0
+          else getImage floorWetCornerLeft images 0
+      | x == 1 && y == xsgL ->
+        if floorTile == Dry
+          then getImage floorDryCornerRight images 180
+          else getImage floorWetCornerRight images 180
+      | x == sgW && y == 1 ->
+        if floorTile == Dry
+          then getImage floorDryCornerRight images 0
+          else getImage floorWetCornerRight images 0
+      | x == sgW && y == xsgL ->
+        if floorTile == Dry
+          then getImage floorDryCornerLeft images 180
+          else getImage floorWetCornerLeft images 180
+      -- Floor Sides
+      | x == 1 && y > 1 && y < xsgL ->
         case floorTile of
           Dry       -> getImage floorDryHorizontal images 180
           otherwise -> getImage floorWetHorizontal images 180
-      | x == 23 && y > 1 && y < 22 ->
+      | x == sgW && y > 1 && y < xsgL ->
         case floorTile of
           Dry       -> getImage floorDryHorizontal images 0
           otherwise -> getImage floorWetHorizontal images 0
-      | y == 22 && x > 1 && x < 23 ->
-        case floorTile of
-          Dry       -> getImage floorDryVertical images 0
-          otherwise -> getImage floorWetVertical images 0
-      | y == 1 && x > 1 && x < 23 ->
+      | y == 1 && x > 1 && x < sgW ->
         case floorTile of
           Dry       -> getImage floorDryVertical images 180
           otherwise -> getImage floorWetVertical images 180
-      | x > 1 && x < 23 && y > 1 && y < 22 && floorTile == Dry ->
-        nextFloor images randomList currentCoords
-      | x > 1 && x < 23 && y > 1 && y < 22 && floorTile == Wet ->
-        getImage floorWetPlain images 0
+      | y == xsgL && x > 1 && x < sgW ->
+        case floorTile of
+          Dry       -> getImage floorDryVertical images 0
+          otherwise -> getImage floorWetVertical images 0
+      -- Floor Internal
+      | x > 1 && x < sgW && y > 1 && y < xsgL ->
+        if floorTile == Dry
+          then nextFloor images randomList currentCoords
+          else getImage floorWetPlain images 0
+      -- Should not be called
       | otherwise -> blank
+  where
+    sgW = gW - 1
+    sgL = gL - 1
+    xsgL = gL - 2
 
-nextCoords :: Coordinates -> Coordinates
-nextCoords current@(x, y) =
-  case current of
-    (_, 24) -> (x + 1, 0) -- each time a row is complete, restart in next column.
-    (_, _)  -> (x, y + 1) -- otherwise, increment the row number.
+nextCoords :: Coordinates -> Length -> Coordinates
+nextCoords current@(x, y) gameLength
+  | y == gameLength = (x + 1, 0) -- each time a row is complete, restart in next column.
+  | otherwise = (x, y + 1) -- otherwise, increment the row number.
+
+nextDimensions :: RandomList -> Dimensions
+nextDimensions randomList =
+  let validSizes = [x | x <- randomList, x > 10 && x < 30]
+   in (validSizes !! 0, validSizes !! 2)
 
 nextWall :: PictureList -> RandomList -> Coordinates -> Picture
 nextWall images randomList coordinates =

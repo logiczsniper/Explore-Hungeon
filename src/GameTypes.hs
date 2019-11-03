@@ -26,6 +26,8 @@ data Tile =
 
 type Coordinates = (Int, Int)
 
+type Dimensions = (Width, Length)
+
 type TileList = [Tile]
 
 type PictureList = [Picture]
@@ -35,6 +37,10 @@ type RandomList = [Int]
 type ImagePath = String
 
 type ImageId = Int
+
+type Width = Int
+
+type Length = Int
 
 type Degrees = Float
 
