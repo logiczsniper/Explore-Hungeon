@@ -52,62 +52,60 @@ nextPicture ::
   -> FloorType
   -> Dimensions
   -> Picture
-nextPicture images currentCoords@(x, y) randomList floorTile (gW, gL) =
-  case currentCoords of
-    (_, _)
-      -- Border Corners
-      | x == 0 && y == 0 -> getImage borderCorner images 180
-      | x == 0 && y == gL -> getImage borderCorner images 270
-      | x == gW && y == 0 -> getImage borderCorner images 90
-      | x == gW && y == gL -> getImage borderCorner images 0
-      -- Border Sides
-      | x == 0 && y > 0 && y < gL -> getImage borderSide images 0
-      | x == gW && y > 0 && y < gL -> getImage borderSide images 180
-      | y == 0 && x > 0 && x < gW -> getImage borderSide images 270
-      | y == gL && x > 0 && x < gW -> getImage borderSide images 90
-      -- Walls
-      | x > 0 && x < gW && y == sgL -> nextWall images randomList currentCoords
-      -- Floor Corners
-      | x == 1 && y == 1 ->
-        if floorTile == Dry
-          then getImage floorDryCornerLeft images 0
-          else getImage floorWetCornerLeft images 0
-      | x == 1 && y == xsgL ->
-        if floorTile == Dry
-          then getImage floorDryCornerRight images 180
-          else getImage floorWetCornerRight images 180
-      | x == sgW && y == 1 ->
-        if floorTile == Dry
-          then getImage floorDryCornerRight images 0
-          else getImage floorWetCornerRight images 0
-      | x == sgW && y == xsgL ->
-        if floorTile == Dry
-          then getImage floorDryCornerLeft images 180
-          else getImage floorWetCornerLeft images 180
-      -- Floor Sides
-      | x == 1 && y > 1 && y < xsgL ->
-        case floorTile of
-          Dry       -> getImage floorDryHorizontal images 180
-          otherwise -> getImage floorWetHorizontal images 180
-      | x == sgW && y > 1 && y < xsgL ->
-        case floorTile of
-          Dry       -> getImage floorDryHorizontal images 0
-          otherwise -> getImage floorWetHorizontal images 0
-      | y == 1 && x > 1 && x < sgW ->
-        case floorTile of
-          Dry       -> getImage floorDryVertical images 180
-          otherwise -> getImage floorWetVertical images 180
-      | y == xsgL && x > 1 && x < sgW ->
-        case floorTile of
-          Dry       -> getImage floorDryVertical images 0
-          otherwise -> getImage floorWetVertical images 0
-      -- Floor Internal
-      | x > 1 && x < sgW && y > 1 && y < xsgL ->
-        if floorTile == Dry
-          then nextFloor images randomList currentCoords
-          else getImage floorWetPlain images 0
-      -- Should not be called
-      | otherwise -> blank
+nextPicture images currentCoords@(x, y) randomList floorTile (gW, gL)
+  -- Border Corners
+  | x == 0 && y == 0 = getImage borderCorner images 180
+  | x == 0 && y == gL = getImage borderCorner images 270
+  | x == gW && y == 0 = getImage borderCorner images 90
+  | x == gW && y == gL = getImage borderCorner images 0
+  -- Border Sides
+  | x == 0 && y > 0 && y < gL = getImage borderSide images 0
+  | x == gW && y > 0 && y < gL = getImage borderSide images 180
+  | y == 0 && x > 0 && x < gW = getImage borderSide images 270
+  | y == gL && x > 0 && x < gW = getImage borderSide images 90
+  -- Walls
+  | x > 0 && x < gW && y == sgL = nextWall images randomList currentCoords
+  -- Floor Corners
+  | x == 1 && y == 1 =
+    if floorTile == Dry
+      then getImage floorDryCornerLeft images 0
+      else getImage floorWetCornerLeft images 0
+  | x == 1 && y == xsgL =
+    if floorTile == Dry
+      then getImage floorDryCornerRight images 180
+      else getImage floorWetCornerRight images 180
+  | x == sgW && y == 1 =
+    if floorTile == Dry
+      then getImage floorDryCornerRight images 0
+      else getImage floorWetCornerRight images 0
+  | x == sgW && y == xsgL =
+    if floorTile == Dry
+      then getImage floorDryCornerLeft images 180
+      else getImage floorWetCornerLeft images 180
+  -- Floor Sides
+  | x == 1 && y > 1 && y < xsgL =
+    case floorTile of
+      Dry       -> getImage floorDryHorizontal images 180
+      otherwise -> getImage floorWetHorizontal images 180
+  | x == sgW && y > 1 && y < xsgL =
+    case floorTile of
+      Dry       -> getImage floorDryHorizontal images 0
+      otherwise -> getImage floorWetHorizontal images 0
+  | y == 1 && x > 1 && x < sgW =
+    case floorTile of
+      Dry       -> getImage floorDryVertical images 180
+      otherwise -> getImage floorWetVertical images 180
+  | y == xsgL && x > 1 && x < sgW =
+    case floorTile of
+      Dry       -> getImage floorDryVertical images 0
+      otherwise -> getImage floorWetVertical images 0
+  -- Floor Internal
+  | x > 1 && x < sgW && y > 1 && y < xsgL =
+    if floorTile == Dry
+      then nextFloor images randomList currentCoords
+      else getImage floorWetPlain images 0
+  -- Should not be called
+  | otherwise = blank
   where
     sgW = gW - 1
     sgL = gL - 1
