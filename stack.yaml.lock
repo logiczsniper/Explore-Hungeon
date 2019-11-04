@@ -46,6 +46,20 @@ packages:
       sha256: 61a764a72012e96ac338622af1dbcd8d7620d5952ccd631fc708fb0c5343494a
   original:
     hackage: extra-1.6.18
+- completed:
+    hackage: gloss-juicy-0.2.3@sha256:0c3bca95237cbf91f8b3b1936a0661f1e0457acd80502276d54d6c5210f88b25,1618
+    pantry-tree:
+      size: 273
+      sha256: 914c08509bc3da4707d90e542b44833ca1a62abc83c2848f87df3d7a7a1d7e03
+  original:
+    hackage: gloss-juicy-0.2.3
+- completed:
+    hackage: JuicyPixels-3.3.4@sha256:190095c0c169f6012e663eff26eae0d1e5107fb77186320b9357761ebaa3aa43,3913
+    pantry-tree:
+      size: 2724
+      sha256: fddc2d4e015ba3ddfc1900d208446c2bb6d84605a4a9f393092c32fb952d3ebf
+  original:
+    hackage: JuicyPixels-3.3.4
 snapshots:
 - completed:
     size: 524789

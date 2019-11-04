@@ -7,6 +7,7 @@ import           Sound.ProteaAudio
 import           GameTypes
 import           GenerateMap
 import           ImageFunctions
+import           ImagePathHelpers
 
 import           System.Environment
 import           System.Random
@@ -31,6 +32,7 @@ where n = row or column number + 1
 -}
 main :: IO ()
 main = do
+  pointerImage <- getPointer
   images <- allImages
   generator <- getStdGen
   play
@@ -38,7 +40,7 @@ main = do
     backgroundColour
     fps
     (initialState images $ randomRs (0, 99) generator)
-    render
+    (render pointerImage)
     handleEvent
     update
 
@@ -67,8 +69,9 @@ update :: Float -> GameState -> GameState
 update time initState = initState
 
 -- | Draw a game state (convert it to a picture).
-render :: GameState -> Picture
-render game = pictures $ createPictures $ tiles game
+render :: Picture -> GameState -> Picture
+render pointerPicture game =
+  pictures $ (createPictures $ tiles game) ++ [pointerPicture]
 
 createPictures :: TileList -> PictureList
 createPictures []    = []
@@ -78,4 +81,4 @@ createPictures tiles = map (\tile -> picture tile) tiles
 initialState :: PictureList -> RandomList -> GameState
 initialState images randomList =
   let startingTiles = generateMap images randomList
-   in Game {tiles = startingTiles, effects = []}
+   in GameState {tiles = startingTiles, effects = [], pointerCoords = (10, 10)}

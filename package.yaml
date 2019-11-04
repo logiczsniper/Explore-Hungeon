@@ -22,10 +22,12 @@ description: Please see the README on GitHub at <https://github.com/logiczsniper
 dependencies:
   - base >= 4.7 && < 5
   - gloss
+  - gloss-juicy
   - proteaaudio
   - random
   - containers
   - extra
+  - JuicyPixels
 
 library:
   source-dirs: src

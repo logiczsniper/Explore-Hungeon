@@ -1,10 +1,12 @@
 module ImageFunctions
   ( allImages
   , getImage
+  , getPointer
   ) where
 
 import           GameTypes
 import           Graphics.Gloss
+import           Graphics.Gloss.Juicy
 import           ImageConstants
 import           ImagePathHelpers
 
@@ -43,3 +45,10 @@ allImages = mapM loadBMP imagePaths
 
 getImage :: Int -> PictureList -> Degrees -> Picture
 getImage index images rotation = rotate rotation (images !! (index))
+
+getPointer :: IO Picture
+getPointer = do
+  mPointerImage <- loadJuicyPNG $ pointerPath "pointer"
+  case mPointerImage of
+    Nothing           -> return blank
+    Just pointerImage -> return pointerImage

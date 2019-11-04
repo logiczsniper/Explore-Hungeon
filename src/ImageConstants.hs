@@ -65,3 +65,6 @@ wallPlantsOne = 23
 wallPlantsTwo = 24
 
 wallPlantsThree = 25
+
+basicPointer :: ImageId
+basicPointer = 26

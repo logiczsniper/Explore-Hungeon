@@ -48,6 +48,8 @@ extra-deps:
   - resourcet-1.1.11
   - streaming-commons-0.1.19
   - extra-1.6.18
+  - gloss-juicy-0.2.3
+  - JuicyPixels-3.3.4
 # Override default flag values for local packages and extra-deps
 # flags: {}
 

@@ -11,14 +11,14 @@ calculateTranslation :: Int -> Float
 calculateTranslation number = intToFloat $ 16 * (number + 1) - 416
 
 tileAdjust :: Tile -> Tile
-tileAdjust  tile =
+tileAdjust tile =
   Tile
-        { picture =
-            translate 200 200 $
-            translate
-              (calculateTranslation $ columnNumber tile)
-              (calculateTranslation $ rowNumber tile) $
-            picture tile
-        , columnNumber = columnNumber tile
-        , rowNumber = rowNumber tile
-        }
+    { picture =
+        translate 200 200 $
+        translate
+          (calculateTranslation $ columnNumber tile)
+          (calculateTranslation $ rowNumber tile) $
+        picture tile
+    , columnNumber = columnNumber tile
+    , rowNumber = rowNumber tile
+    }

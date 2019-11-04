@@ -15,13 +15,13 @@ import           TileAdjust
 generateMap :: PictureList -> RandomList -> TileList
 generateMap images randomList =
   let startingTile = Tile {picture = blank, columnNumber = 0, rowNumber = -1}
-      floorTile = floorsProbability randomList
+      mapType = floorsProbability randomList
       gameWidth = fst $ nextDimensions randomList
       gameLength = snd $ nextDimensions randomList
       allTiles =
         takeWhile checkTile $
         iterate
-          (tileGenerator images randomList floorTile (gameWidth, gameLength))
+          (tileGenerator images randomList mapType (gameWidth, gameLength))
           startingTile
    in map tileAdjust allTiles
 
@@ -32,13 +32,13 @@ checkTile tile =
     else True
 
 tileGenerator ::
-     PictureList -> RandomList -> FloorType -> Dimensions -> Tile -> Tile
-tileGenerator images randomList floorTile dimensions@(_, gameLength) previousTile =
+     PictureList -> RandomList -> MapType -> Dimensions -> Tile -> Tile
+tileGenerator images randomList mapType dimensions@(_, gameLength) previousTile =
   let newCoords =
         nextCoords
           (columnNumber previousTile, rowNumber previousTile)
           gameLength
-      newPicture = nextPicture images newCoords randomList floorTile dimensions
+      newPicture = nextPicture images newCoords randomList mapType dimensions
    in Tile
         { picture = newPicture
         , columnNumber = fst newCoords
@@ -49,10 +49,10 @@ nextPicture ::
      PictureList
   -> Coordinates
   -> RandomList
-  -> FloorType
+  -> MapType
   -> Dimensions
   -> Picture
-nextPicture images currentCoords@(x, y) randomList floorTile (gW, gL)
+nextPicture images currentCoords@(x, y) randomList mapType (gW, gL)
   -- Border Corners
   | x == 0 && y == 0 = getImage borderCorner images 180
   | x == 0 && y == gL = getImage borderCorner images 270
@@ -67,41 +67,41 @@ nextPicture images currentCoords@(x, y) randomList floorTile (gW, gL)
   | x > 0 && x < gW && y == sgL = nextWall images randomList currentCoords
   -- Floor Corners
   | x == 1 && y == 1 =
-    if floorTile == Dry
+    if mapType == Dry
       then getImage floorDryCornerLeft images 0
       else getImage floorWetCornerLeft images 0
   | x == 1 && y == xsgL =
-    if floorTile == Dry
+    if mapType == Dry
       then getImage floorDryCornerRight images 180
       else getImage floorWetCornerRight images 180
   | x == sgW && y == 1 =
-    if floorTile == Dry
+    if mapType == Dry
       then getImage floorDryCornerRight images 0
       else getImage floorWetCornerRight images 0
   | x == sgW && y == xsgL =
-    if floorTile == Dry
+    if mapType == Dry
       then getImage floorDryCornerLeft images 180
       else getImage floorWetCornerLeft images 180
   -- Floor Sides
   | x == 1 && y > 1 && y < xsgL =
-    case floorTile of
+    case mapType of
       Dry       -> getImage floorDryHorizontal images 180
       otherwise -> getImage floorWetHorizontal images 180
   | x == sgW && y > 1 && y < xsgL =
-    case floorTile of
+    case mapType of
       Dry       -> getImage floorDryHorizontal images 0
       otherwise -> getImage floorWetHorizontal images 0
   | y == 1 && x > 1 && x < sgW =
-    case floorTile of
+    case mapType of
       Dry       -> getImage floorDryVertical images 180
       otherwise -> getImage floorWetVertical images 180
   | y == xsgL && x > 1 && x < sgW =
-    case floorTile of
+    case mapType of
       Dry       -> getImage floorDryVertical images 0
       otherwise -> getImage floorWetVertical images 0
   -- Floor Internal
   | x > 1 && x < sgW && y > 1 && y < xsgL =
-    if floorTile == Dry
+    if mapType == Dry
       then nextFloor images randomList currentCoords
       else getImage floorWetPlain images 0
   -- Should not be called

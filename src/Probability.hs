@@ -6,7 +6,7 @@ module Probability
 import           GameTypes
 import           System.Random
 
-floorsProbability :: RandomList -> FloorType
+floorsProbability :: RandomList -> MapType
 floorsProbability randomList =
   let value = randomList !! 0
    in if elem value [0 .. 68]

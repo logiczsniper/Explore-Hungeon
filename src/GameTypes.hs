@@ -3,9 +3,10 @@ module GameTypes where
 import           Graphics.Gloss
 
 data GameState =
-  Game
+  GameState
     { tiles   :: [Tile]
     , effects :: [Effect]
+    , pointerCoords :: Coordinates
     }
   deriving (Show)
 
@@ -44,7 +45,7 @@ type Length = Int
 
 type Degrees = Float
 
-data FloorType
+data MapType
   = Dry
   | Wet
   deriving (Enum, Eq)
