@@ -7,6 +7,7 @@ data GameState =
     { tiles         :: [Tile]
     , effects       :: [Effect]
     , pointerCoords :: Coordinates
+    , mapNumber     :: MapNumber
     }
   deriving (Show)
 
@@ -22,8 +23,9 @@ data Tile =
     { picture      :: Picture
     , columnNumber :: Int
     , rowNumber    :: Int
+    , isEntrance   :: Bool
     }
-  deriving (Show)
+  deriving (Show, Eq)
 
 type Coordinates = (Int, Int)
 
@@ -44,6 +46,8 @@ type ImageId = Int
 type Width = Int
 
 type Length = Int
+
+type MapNumber = Int
 
 type Degrees = Float
 

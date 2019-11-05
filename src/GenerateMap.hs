@@ -12,10 +12,16 @@ import           Probability
 import           System.Random
 import           TileAdjust
 
-generateMap :: PictureList -> RandomList -> TileList
-generateMap images randomList =
-  let startingTile = Tile {picture = blank, columnNumber = 0, rowNumber = -1}
-      mapType = floorsProbability randomList
+generateMap :: PictureList -> RandomList -> MapNumber -> TileList
+generateMap images randomList mapNumber =
+  let startingTile =
+        Tile
+          { picture = blank
+          , columnNumber = 0
+          , rowNumber = -1
+          , isEntrance = False
+          }
+      mapType = floorsProbability randomList mapNumber
       gameWidth = fst $ nextDimensions randomList
       gameLength = snd $ nextDimensions randomList
       allTiles =
@@ -43,6 +49,13 @@ tileGenerator images randomList mapType dimensions@(_, gameLength) previousTile 
         { picture = newPicture
         , columnNumber = fst newCoords
         , rowNumber = snd newCoords
+        , isEntrance =
+            elem
+              newPicture
+              [ (getImage floorDryDoor images 0)
+              , (getImage wallSecretOpen images 0)
+              , (getImage wallStandardDoor images 0)
+              ]
         }
 
 nextPicture ::

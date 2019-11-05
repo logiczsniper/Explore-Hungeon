@@ -22,4 +22,5 @@ tileAdjust tile =
         picture tile
     , columnNumber = columnNumber tile
     , rowNumber = rowNumber tile
+    , isEntrance = isEntrance tile
     }

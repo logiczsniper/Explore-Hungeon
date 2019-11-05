@@ -6,9 +6,9 @@ module Probability
 import           GameTypes
 import           System.Random
 
-floorsProbability :: RandomList -> MapType
-floorsProbability randomList =
-  let value = randomList !! 0
+floorsProbability :: RandomList -> MapNumber -> MapType
+floorsProbability randomList mapNumber =
+  let value = randomList !! mapNumber
    in if elem value [0 .. 68]
         then Dry
         else Wet

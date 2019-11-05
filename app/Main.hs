@@ -8,8 +8,7 @@ import           GameTypes
 import           GenerateMap
 import           ImageFunctions
 import           ImagePathHelpers
-import           PointerTranslation
-
+import           PointerFunctions
 import           System.Environment
 import           System.Random
 
@@ -42,7 +41,7 @@ main = do
     fps
     (initialState images $ randomRs (0, 99) generator)
     (render pointerImage)
-    handleEvent
+    (handleEvent images $ randomRs (0, 99) generator)
     update
 
 -- | Some defining helper main functions. Note: 50 * 50 tiles at 16px each max.
@@ -62,26 +61,20 @@ backgroundColour :: Color
 backgroundColour = makeColorI 19 19 19 255
 
 -- | Handle the mouse input from the user, changing the game state.
-handleEvent :: Event -> GameState -> GameState
-handleEvent key initState =
+handleEvent :: PictureList -> RandomList -> Event -> GameState -> GameState
+handleEvent images randomList key initState =
   case key of
     EventKey (SpecialKey KeyUp) Down _ _ -> movePointer initState (x, y + 1)
     EventKey (SpecialKey KeyDown) Down _ _ -> movePointer initState (x, y - 1)
     EventKey (SpecialKey KeyLeft) Down _ _ -> movePointer initState (x - 1, y)
     EventKey (SpecialKey KeyRight) Down _ _ -> movePointer initState (x + 1, y)
+    EventKey (Char 'e') Down _ _ ->
+      tilePointerInteraction coords initState images randomList
     otherwise -> initState
   where
     coords = pointerCoords initState
     x = fst coords
     y = snd coords
-
-movePointer :: GameState -> Coordinates -> GameState
-movePointer startState newCoords =
-  GameState
-    { tiles = tiles startState
-    , effects = effects startState
-    , pointerCoords = newCoords
-    }
 
 -- | Update the game state.
 update :: Float -> GameState -> GameState
@@ -102,5 +95,11 @@ createPictures tiles = map (\tile -> picture tile) tiles
 -- | Initialize the game with this game state.
 initialState :: PictureList -> RandomList -> GameState
 initialState images randomList =
-  let startingTiles = generateMap images randomList
-   in GameState {tiles = startingTiles, effects = [], pointerCoords = (10, 10)}
+  let startingMapNumber = 0
+      startingTiles = generateMap images randomList startingMapNumber
+   in GameState
+        { tiles = startingTiles
+        , effects = []
+        , pointerCoords = (20, 20)
+        , mapNumber = startingMapNumber
+        }
