@@ -8,6 +8,7 @@ import           GameTypes
 import           GenerateMap
 import           ImageFunctions
 import           ImagePathHelpers
+import           PointerTranslation
 
 import           System.Environment
 import           System.Random
@@ -62,7 +63,25 @@ backgroundColour = makeColorI 19 19 19 255
 
 -- | Handle the mouse input from the user, changing the game state.
 handleEvent :: Event -> GameState -> GameState
-handleEvent event initState = initState
+handleEvent key initState =
+  case key of
+    EventKey (SpecialKey KeyUp) Down _ _ -> movePointer initState (x, y + 1)
+    EventKey (SpecialKey KeyDown) Down _ _ -> movePointer initState (x, y - 1)
+    EventKey (SpecialKey KeyLeft) Down _ _ -> movePointer initState (x - 1, y)
+    EventKey (SpecialKey KeyRight) Down _ _ -> movePointer initState (x + 1, y)
+    otherwise -> initState
+  where
+    coords = pointerCoords initState
+    x = fst coords
+    y = snd coords
+
+movePointer :: GameState -> Coordinates -> GameState
+movePointer startState newCoords =
+  GameState
+    { tiles = tiles startState
+    , effects = effects startState
+    , pointerCoords = newCoords
+    }
 
 -- | Update the game state.
 update :: Float -> GameState -> GameState
@@ -71,7 +90,10 @@ update time initState = initState
 -- | Draw a game state (convert it to a picture).
 render :: Picture -> GameState -> Picture
 render pointerPicture game =
-  pictures $ (createPictures $ tiles game) ++ [pointerPicture]
+  pictures $
+  (createPictures $ tiles game) ++ [translatePointer pointerPicture coords]
+  where
+    coords = pointerCoords game
 
 createPictures :: TileList -> PictureList
 createPictures []    = []

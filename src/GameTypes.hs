@@ -4,8 +4,8 @@ import           Graphics.Gloss
 
 data GameState =
   GameState
-    { tiles   :: [Tile]
-    , effects :: [Effect]
+    { tiles         :: [Tile]
+    , effects       :: [Effect]
     , pointerCoords :: Coordinates
     }
   deriving (Show)
@@ -34,6 +34,8 @@ type TileList = [Tile]
 type PictureList = [Picture]
 
 type RandomList = [Int]
+
+type Pointer = Picture
 
 type ImagePath = String
 

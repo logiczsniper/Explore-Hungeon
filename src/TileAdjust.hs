@@ -1,5 +1,6 @@
 module TileAdjust
   ( tileAdjust
+  , calculateTranslation
   ) where
 
 import           GameTypes
