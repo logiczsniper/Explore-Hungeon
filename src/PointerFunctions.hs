@@ -32,9 +32,7 @@ tilePointerInteraction ::
 tilePointerInteraction coords@(x, y) startState images randomList =
   if elem coords $ getEntranceCoords $ tiles startState
     then let newMapNumber = mapNumber startState + 1
-             addition = calculateAddition newMapNumber
-             newTiles =
-               generateMap images (map (+ addition) randomList) newMapNumber
+             newTiles = generateMap images randomList newMapNumber
           in GameState
                { tiles = newTiles
                , effects = []
@@ -42,12 +40,6 @@ tilePointerInteraction coords@(x, y) startState images randomList =
                , mapNumber = newMapNumber
                }
     else startState
-
-calculateAddition :: MapNumber -> Int
-calculateAddition input =
-  if mod input 2 == 0
-    then input + 1
-    else input + 3
 
 getEntranceCoords :: TileList -> [Coordinates]
 getEntranceCoords tiles =

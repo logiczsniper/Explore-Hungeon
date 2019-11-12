@@ -22,12 +22,17 @@ generateMap images randomList mapNumber =
           , isEntrance = False
           }
       mapType = floorsProbability randomList mapNumber
-      gameWidth = fst $ nextDimensions randomList
-      gameLength = snd $ nextDimensions randomList
+      gameWidth = fst $ nextDimensions randomList mapNumber
+      gameLength = snd $ nextDimensions randomList mapNumber
       allTiles =
         takeWhile checkTile $
         iterate
-          (tileGenerator images randomList mapType (gameWidth, gameLength))
+          (tileGenerator
+             images
+             randomList
+             mapType
+             mapNumber
+             (gameWidth, gameLength))
           startingTile
    in map tileAdjust allTiles
 
@@ -38,13 +43,20 @@ checkTile tile =
     else True
 
 tileGenerator ::
-     PictureList -> RandomList -> MapType -> Dimensions -> Tile -> Tile
-tileGenerator images randomList mapType dimensions@(_, gameLength) previousTile =
+     PictureList
+  -> RandomList
+  -> MapType
+  -> MapNumber
+  -> Dimensions
+  -> Tile
+  -> Tile
+tileGenerator images randomList mapType mapNumber dimensions@(_, gameLength) previousTile =
   let newCoords =
         nextCoords
           (columnNumber previousTile, rowNumber previousTile)
           gameLength
-      newPicture = nextPicture images newCoords randomList mapType dimensions
+      newPicture =
+        nextPicture images newCoords randomList mapType dimensions mapNumber
    in Tile
         { picture = newPicture
         , columnNumber = fst newCoords
@@ -64,8 +76,9 @@ nextPicture ::
   -> RandomList
   -> MapType
   -> Dimensions
+  -> MapNumber
   -> Picture
-nextPicture images currentCoords@(x, y) randomList mapType (gW, gL)
+nextPicture images currentCoords@(x, y) randomList mapType (gW, gL) mapNumber
   -- Border Corners
   | x == 0 && y == 0 = getImage borderCorner images 180
   | x == 0 && y == gL = getImage borderCorner images 270
@@ -77,7 +90,8 @@ nextPicture images currentCoords@(x, y) randomList mapType (gW, gL)
   | y == 0 && x > 0 && x < gW = getImage borderSide images 270
   | y == gL && x > 0 && x < gW = getImage borderSide images 90
   -- Walls
-  | x > 0 && x < gW && y == sgL = nextWall images randomList currentCoords
+  | x > 0 && x < gW && y == sgL =
+    nextWall images randomList currentCoords mapNumber
   -- Floor Corners
   | x == 1 && y == 1 =
     if mapType == Dry
@@ -115,7 +129,7 @@ nextPicture images currentCoords@(x, y) randomList mapType (gW, gL)
   -- Floor Internal
   | x > 1 && x < sgW && y > 1 && y < xsgL =
     if mapType == Dry
-      then nextFloor images randomList currentCoords
+      then nextFloor images randomList currentCoords mapNumber
       else getImage floorWetPlain images 0
   -- Should not be called
   | otherwise = blank
@@ -129,30 +143,36 @@ nextCoords current@(x, y) gameLength
   | y == gameLength = (x + 1, 0) -- each time a row is complete, restart in next column.
   | otherwise = (x, y + 1) -- otherwise, increment the row number.
 
-nextDimensions :: RandomList -> Dimensions
-nextDimensions randomList =
+nextDimensions :: RandomList -> Int -> Dimensions
+nextDimensions randomList mapNumber =
   let validSizes = [x | x <- randomList, x > 10 && x < 30]
-   in (validSizes !! 0, validSizes !! 2)
+   in (validSizes !! mapNumber - 1, validSizes !! mapNumber + 3)
 
-nextWall :: PictureList -> RandomList -> Coordinates -> Picture
-nextWall images randomList coordinates =
-  let probability = nextProbability randomList coordinates
-   in case probability of
-        _
-          | elem probability [0 .. 1] -> getImage wallSecretOpen images 0
-          | elem probability [2 .. 4] -> getImage wallSecretCracked images 0
-          | elem probability [5 .. 9] -> getImage wallSecretClosed images 0
-          | elem probability [10 .. 12] -> getImage wallStandardDoor images 0
-          | elem probability [13 .. 15] -> getImage wallStandardFancy images 0
-          | otherwise -> getImage wallStandardPlain images 0
+nextWall :: PictureList -> RandomList -> Coordinates -> MapNumber -> Picture
+nextWall images randomList coordinates mapNumber
+  | nextProbability' [0 .. 1] = getImage wallSecretOpen images 0
+  | nextProbability' [2 .. 4] = getImage wallSecretCracked images 0
+  | nextProbability' [5 .. 9] = getImage wallSecretClosed images 0
+  | nextProbability' [10 .. 12] = getImage wallStandardDoor images 0
+  | nextProbability' [13 .. 15] = getImage wallStandardFancy images 0
+  | otherwise = getImage wallStandardPlain images 0
+  where
+    randomInt = getRandomInt randomList coordinates
+    nextProbability' = nextProbability randomInt mapNumber
 
-nextFloor :: PictureList -> RandomList -> Coordinates -> Picture
-nextFloor images randomList coordinates =
-  let probability = nextProbability randomList coordinates
-   in case probability of
-        _
-          | elem probability [0] -> getImage floorDryDoor images 0
-          | elem probability [1 .. 5] -> getImage floorPlantsOne images 0
-          | elem probability [6 .. 9] -> getImage floorPlantsTwo images 0
-          | elem probability [10 .. 13] -> getImage floorPlantsThree images 0
-          | otherwise -> getImage floorDryPlain images 0
+nextFloor :: PictureList -> RandomList -> Coordinates -> MapNumber -> Picture
+nextFloor images randomList coordinates mapNumber
+  | nextProbability' [0] = getImage floorDryDoor images 0
+  | nextProbability' [1 .. 5] = getImage floorPlantsOne images 0
+  | nextProbability' [6 .. 9] = getImage floorPlantsTwo images 0
+  | nextProbability' [10 .. 13] = getImage floorPlantsThree images 0
+  | otherwise = getImage floorDryPlain images 0
+  where
+    randomInt = getRandomInt randomList coordinates
+    nextProbability' = nextProbability randomInt mapNumber
+
+nextProbability :: Int -> MapNumber -> Probability -> Bool
+nextProbability value mapNumber probability = elem value newProbability
+  where
+    shift = mapNumber * 5
+    newProbability = shiftProbability probability shift

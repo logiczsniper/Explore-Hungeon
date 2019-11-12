@@ -1,6 +1,7 @@
 module Probability
   ( floorsProbability
-  , nextProbability
+  , getRandomInt
+  , shiftProbability
   ) where
 
 import           GameTypes
@@ -13,5 +14,15 @@ floorsProbability randomList mapNumber =
         then Dry
         else Wet
 
-nextProbability :: RandomList -> Coordinates -> Int
-nextProbability randomList coordinates@(x, y) = randomList !! (x * 10 + y)
+getRandomInt :: RandomList -> Coordinates -> Int
+getRandomInt randomList coordinates@(x, y) = randomList !! (x * 10 + y)
+
+shiftProbability :: Probability -> Int -> Probability
+shiftProbability startProbability shift =
+  map (incrementList shift) startProbability
+
+incrementList :: Int -> Int -> Int
+incrementList shift num
+  | num == 99 = shift - 1
+  | (99 - num) < shift = num - 99 * (-1)
+  | otherwise = num + shift

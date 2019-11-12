@@ -37,6 +37,8 @@ type PictureList = [Picture]
 
 type RandomList = [Int]
 
+type Probability = [Int]
+
 type Pointer = Picture
 
 type ImagePath = String
