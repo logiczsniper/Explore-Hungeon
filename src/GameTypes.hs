@@ -4,17 +4,17 @@ import           Graphics.Gloss
 
 data GameState =
   GameState
-    { tiles         :: [Tile]
-    , effects       :: [Effect]
-    , pointerCoords :: Coordinates
-    , mapNumber     :: MapNumber
+    { tiles        :: [Tile]
+    , pointerState :: PointerState
+    , mapNumber    :: MapNumber
     }
   deriving (Show)
 
-data Effect =
-  Effect
-    { frames     :: [Picture]
-    , frameCount :: Int
+data PointerState =
+  PointerState
+    { frames :: [Picture]
+    , index  :: Int
+    , coords :: Coordinates
     }
   deriving (Show)
 

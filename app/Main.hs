@@ -70,12 +70,12 @@ handleEvent images randomList key initState =
     EventKey (Char 'd') Down _ _ -> movePointer initState (x + 1, y)
     EventKey (Char 'q') Down _ _ -> error "Player has quit."
     EventKey (Char 'e') Down _ _ ->
-      tilePointerInteraction coords initState images randomList
+      tilePointerInteraction pointerCoords initState images randomList
     otherwise -> initState
   where
-    coords = pointerCoords initState
-    x = fst coords
-    y = snd coords
+    pointerCoords = coords $ pointerState initState
+    x = fst pointerCoords
+    y = snd pointerCoords
 
 -- | Update the game state.
 update :: Float -> GameState -> GameState
@@ -85,9 +85,10 @@ update time initState = initState
 render :: Picture -> GameState -> Picture
 render pointerPicture game =
   pictures $
-  (createPictures $ tiles game) ++ [translatePointer pointerPicture coords]
+  (createPictures $ tiles game) ++
+  [translatePointer pointerPicture pointerCoords]
   where
-    coords = pointerCoords game
+    pointerCoords = coords $ pointerState game
 
 createPictures :: TileList -> PictureList
 createPictures []    = []
@@ -98,9 +99,10 @@ initialState :: PictureList -> RandomList -> GameState
 initialState images randomList =
   let startingMapNumber = 0
       startingTiles = generateMap images randomList startingMapNumber
+      startingPointerState =
+        PointerState {frames = [], index = 0, coords = (20, 20)}
    in GameState
         { tiles = startingTiles
-        , effects = []
-        , pointerCoords = (20, 20)
+        , pointerState = startingPointerState
         , mapNumber = startingMapNumber
         }

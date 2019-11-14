@@ -22,8 +22,12 @@ movePointer :: GameState -> Coordinates -> GameState
 movePointer startState newCoords =
   GameState
     { tiles = tiles startState
-    , effects = effects startState
-    , pointerCoords = newCoords
+    , pointerState =
+        PointerState
+          { frames = frames $ pointerState startState
+          , index = index $ pointerState startState
+          , coords = newCoords
+          }
     , mapNumber = mapNumber startState
     }
 
@@ -36,8 +40,12 @@ tilePointerInteraction coords@(x, y) startState images randomList =
    in if entrances == [] || elem coords entrances
         then GameState
                { tiles = newTiles
-               , effects = effects startState
-               , pointerCoords = (x, y)
+               , pointerState =
+                   PointerState
+                     { frames = frames $ pointerState startState
+                     , index = index $ pointerState startState
+                     , coords = coords
+                     }
                , mapNumber = newMapNumber
                }
         else startState
