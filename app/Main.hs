@@ -10,7 +10,6 @@ import           ImageFunctions
 import           ImagePathHelpers
 import           PointerFunctions
 import           System.Environment
-import           System.Exit                        (exitSuccess)
 import           System.Random
 
 {-
@@ -69,7 +68,7 @@ handleEvent images randomList key initState =
     EventKey (Char 's') Down _ _ -> movePointer initState (x, y - 1)
     EventKey (Char 'a') Down _ _ -> movePointer initState (x - 1, y)
     EventKey (Char 'd') Down _ _ -> movePointer initState (x + 1, y)
-    EventKey (Char 'q') Down _ _ -> exitSuccess
+    EventKey (Char 'q') Down _ _ -> error "Player has quit."
     EventKey (Char 'e') Down _ _ ->
       tilePointerInteraction coords initState images randomList
     otherwise -> initState
