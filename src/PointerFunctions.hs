@@ -30,16 +30,17 @@ movePointer startState newCoords =
 tilePointerInteraction ::
      Coordinates -> GameState -> PictureList -> RandomList -> GameState
 tilePointerInteraction coords@(x, y) startState images randomList =
-  if elem coords $ getEntranceCoords $ tiles startState
-    then let newMapNumber = mapNumber startState + 1
-             newTiles = generateMap images randomList newMapNumber
-          in GameState
+  let entrances = getEntranceCoords $ tiles startState
+      newMapNumber = mapNumber startState + 1
+      newTiles = generateMap images randomList newMapNumber
+   in if entrances == [] || elem coords entrances
+        then GameState
                { tiles = newTiles
-               , effects = []
+               , effects = effects startState
                , pointerCoords = (x, y)
                , mapNumber = newMapNumber
                }
-    else startState
+        else startState
 
 getEntranceCoords :: TileList -> [Coordinates]
 getEntranceCoords tiles =

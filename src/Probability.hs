@@ -17,6 +17,7 @@ floorsProbability randomList mapNumber =
 getRandomInt :: RandomList -> Coordinates -> Int
 getRandomInt randomList coordinates@(x, y) = randomList !! (x * 10 + y)
 
+-- TODO: shifting not correct - later in game!
 shiftProbability :: Probability -> Int -> Probability
 shiftProbability startProbability shift =
   map (incrementList shift) startProbability
@@ -24,5 +25,5 @@ shiftProbability startProbability shift =
 incrementList :: Int -> Int -> Int
 incrementList shift num
   | num == 99 = shift - 1
-  | (99 - num) < shift = num - 99 * (-1)
+  | (99 - num) < shift = (num + shift) - 99
   | otherwise = num + shift

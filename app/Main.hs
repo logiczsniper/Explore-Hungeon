@@ -10,6 +10,7 @@ import           ImageFunctions
 import           ImagePathHelpers
 import           PointerFunctions
 import           System.Environment
+import           System.Exit                        (exitSuccess)
 import           System.Random
 
 {-
@@ -64,10 +65,11 @@ backgroundColour = makeColorI 19 19 19 255
 handleEvent :: PictureList -> RandomList -> Event -> GameState -> GameState
 handleEvent images randomList key initState =
   case key of
-    EventKey (SpecialKey KeyUp) Down _ _ -> movePointer initState (x, y + 1)
-    EventKey (SpecialKey KeyDown) Down _ _ -> movePointer initState (x, y - 1)
-    EventKey (SpecialKey KeyLeft) Down _ _ -> movePointer initState (x - 1, y)
-    EventKey (SpecialKey KeyRight) Down _ _ -> movePointer initState (x + 1, y)
+    EventKey (Char 'w') Down _ _ -> movePointer initState (x, y + 1)
+    EventKey (Char 's') Down _ _ -> movePointer initState (x, y - 1)
+    EventKey (Char 'a') Down _ _ -> movePointer initState (x - 1, y)
+    EventKey (Char 'd') Down _ _ -> movePointer initState (x + 1, y)
+    EventKey (Char 'q') Down _ _ -> exitSuccess
     EventKey (Char 'e') Down _ _ ->
       tilePointerInteraction coords initState images randomList
     otherwise -> initState

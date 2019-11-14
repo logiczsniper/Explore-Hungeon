@@ -94,21 +94,21 @@ nextPicture images currentCoords@(x, y) randomList mapType (gW, gL) mapNumber
     nextWall images randomList currentCoords mapNumber
   -- Floor Corners
   | x == 1 && y == 1 =
-    if mapType == Dry
-      then getImage floorDryCornerLeft images 0
-      else getImage floorWetCornerLeft images 0
+    case mapType of
+      Dry       -> getImage floorDryCornerLeft images 0
+      otherwise -> getImage floorWetCornerLeft images 0
   | x == 1 && y == xsgL =
-    if mapType == Dry
-      then getImage floorDryCornerRight images 180
-      else getImage floorWetCornerRight images 180
+    case mapType of
+      Dry       -> getImage floorDryCornerRight images 180
+      otherwise -> getImage floorWetCornerRight images 180
   | x == sgW && y == 1 =
-    if mapType == Dry
-      then getImage floorDryCornerRight images 0
-      else getImage floorWetCornerRight images 0
+    case mapType of
+      Dry       -> getImage floorDryCornerRight images 0
+      otherwise -> getImage floorWetCornerRight images 0
   | x == sgW && y == xsgL =
-    if mapType == Dry
-      then getImage floorDryCornerLeft images 180
-      else getImage floorWetCornerLeft images 180
+    case mapType of
+      Dry       -> getImage floorDryCornerLeft images 180
+      otherwise -> getImage floorWetCornerLeft images 180
   -- Floor Sides
   | x == 1 && y > 1 && y < xsgL =
     case mapType of
@@ -128,9 +128,9 @@ nextPicture images currentCoords@(x, y) randomList mapType (gW, gL) mapNumber
       otherwise -> getImage floorWetVertical images 0
   -- Floor Internal
   | x > 1 && x < sgW && y > 1 && y < xsgL =
-    if mapType == Dry
-      then nextFloor images randomList currentCoords mapNumber
-      else getImage floorWetPlain images 0
+    case mapType of
+      Dry       -> nextFloor images randomList currentCoords mapNumber
+      otherwise -> getImage floorWetPlain images 0
   -- Should not be called
   | otherwise = blank
   where
