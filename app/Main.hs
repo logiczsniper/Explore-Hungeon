@@ -85,15 +85,14 @@ update time initState =
     , pointerState =
         PointerState
           { frames = frames $ pointerState initState
-          , index = 1
+          , index = incrementIndex increment (index $ pointerState initState)
           , coords = coords $ pointerState initState
           }
     , mapNumber = mapNumber initState
     }
   where
-    increment = round $ time / (2)
+    increment = round $ time / (1 / 25)
 
--- incrementIndex increment (index $ pointerState initState)
 incrementIndex :: Int -> Int -> Int
 incrementIndex x 0 = x
 incrementIndex startIndex increment

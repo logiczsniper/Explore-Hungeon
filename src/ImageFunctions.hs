@@ -52,9 +52,9 @@ allImages = mapM loadBMP $ take 26 imagePaths
 getImage :: Int -> PictureList -> Degrees -> Picture
 getImage index images rotation = rotate rotation (images !! (index))
 
-getAlphaImage :: String -> IO Picture
-getAlphaImage name = do
-  mPointerImage <- loadJuicyPNG $ pointerPath name
+getAlphaImage :: ImagePath -> IO Picture
+getAlphaImage path = do
+  mPointerImage <- loadJuicyPNG $ path
   case mPointerImage of
     Nothing           -> return blank
     Just pointerImage -> return pointerImage

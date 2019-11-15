@@ -33,7 +33,7 @@ incrementList shift num
 adjustShift :: Int -> Int
 adjustShift start
   | start == 99 = 5
-  | start > 99 = adjustShift $ start - 99
+  | start > 99 = mod start 99
   | otherwise = start
 
 nextProbability :: Int -> MapNumber -> Probability -> Bool
