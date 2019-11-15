@@ -111,13 +111,13 @@ updateSize x mapNumber
 render :: GameState -> Picture
 render game =
   if pointerSize <= 0.001
-    then color white $ scale 0.15 0.15 (text "Game Over")
+    then translate (-65) 10 $ color white $ scale 0.15 0.15 (text "Game Over")
     else pictures $
          (createPictures $ tiles game) ++
          [ translatePointer
              (scale pointerSize pointerSize $ pointerFrames !! pointerIndex)
              pointerCoords
-         , color (getColor pointerSize) (rectangleSolid 1000 1000)
+         , color (getColor pointerSize) (rectangleSolid 10000 10000)
          , color white $
            translate (-200) (330) $
            scale 0.15 0.15 (text ("Score: " ++ (show $ mapNumber game)))
