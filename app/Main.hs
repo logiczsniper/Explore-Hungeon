@@ -115,12 +115,18 @@ render game =
   [ translatePointer
       (scale pointerSize pointerSize $ pointerFrames !! pointerIndex)
       pointerCoords
-  ]
+  ] ++
+  [color (getColor pointerSize) (rectangleSolid 1000 1000)]
   where
     pointerCoords = coords $ pointerState game
     pointerFrames = frames $ pointerState game
     pointerIndex = index $ pointerState game
     pointerSize = size $ pointerState game
+
+getColor :: Size -> Color
+getColor pointerSize =
+  let alpha = round $ pointerSize * (-150) + 255
+   in makeColorI 0 0 0 alpha
 
 createPictures :: TileList -> PictureList
 createPictures []    = []
