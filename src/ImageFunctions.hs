@@ -1,7 +1,7 @@
 module ImageFunctions
   ( allImages
   , getImage
-  , getPointer
+  , getFrames
   ) where
 
 import           GameTypes
@@ -38,17 +38,28 @@ imagePaths =
   , wallPath "plants/one"
   , wallPath "plants/two"
   , wallPath "plants/three"
+  , pointerPath "one"
+  , pointerPath "two"
+  , pointerPath "three"
+  , pointerPath "four"
+  , pointerPath "five"
+  , pointerPath "six"
   ]
 
 allImages :: IO PictureList
-allImages = mapM loadBMP imagePaths
+allImages = mapM loadBMP $ take 26 imagePaths
 
 getImage :: Int -> PictureList -> Degrees -> Picture
 getImage index images rotation = rotate rotation (images !! (index))
 
-getPointer :: IO Picture
-getPointer = do
-  mPointerImage <- loadJuicyPNG $ pointerPath "pointer"
+getAlphaImage :: String -> IO Picture
+getAlphaImage name = do
+  mPointerImage <- loadJuicyPNG $ pointerPath name
   case mPointerImage of
     Nothing           -> return blank
     Just pointerImage -> return pointerImage
+
+getFrames :: IO PictureList
+getFrames =
+  let paths = drop 26 imagePaths
+   in mapM getAlphaImage paths

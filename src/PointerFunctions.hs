@@ -40,12 +40,7 @@ tilePointerInteraction coords@(x, y) startState images randomList =
    in if entrances == [] || elem coords entrances
         then GameState
                { tiles = newTiles
-               , pointerState =
-                   PointerState
-                     { frames = frames $ pointerState startState
-                     , index = index $ pointerState startState
-                     , coords = coords
-                     }
+               , pointerState = pointerState startState
                , mapNumber = newMapNumber
                }
         else startState

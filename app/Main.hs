@@ -32,15 +32,15 @@ where n = row or column number + 1
 -}
 main :: IO ()
 main = do
-  pointerImage <- getPointer
+  frames <- getFrames
   images <- allImages
   generator <- getStdGen
   play
     window
     backgroundColour
     fps
-    (initialState images $ randomRs (0, 99) generator)
-    (render pointerImage)
+    (initialState images frames $ randomRs (0, 99) generator)
+    render
     (handleEvent images $ randomRs (0, 99) generator)
     update
 
@@ -79,28 +79,49 @@ handleEvent images randomList key initState =
 
 -- | Update the game state.
 update :: Float -> GameState -> GameState
-update time initState = initState
+update time initState =
+  GameState
+    { tiles = tiles initState
+    , pointerState =
+        PointerState
+          { frames = frames $ pointerState initState
+          , index = 1
+          , coords = coords $ pointerState initState
+          }
+    , mapNumber = mapNumber initState
+    }
+  where
+    increment = round $ time / (2)
+
+-- incrementIndex increment (index $ pointerState initState)
+incrementIndex :: Int -> Int -> Int
+incrementIndex x 0 = x
+incrementIndex startIndex increment
+  | startIndex == 5 = incrementIndex 0 (increment - 1)
+  | startIndex < 5 = incrementIndex (startIndex + 1) (increment - 1)
 
 -- | Draw a game state (convert it to a picture).
-render :: Picture -> GameState -> Picture
-render pointerPicture game =
+render :: GameState -> Picture
+render game =
   pictures $
   (createPictures $ tiles game) ++
-  [translatePointer pointerPicture pointerCoords]
+  [translatePointer (pointerFrames !! pointerIndex) pointerCoords]
   where
     pointerCoords = coords $ pointerState game
+    pointerFrames = frames $ pointerState game
+    pointerIndex = index $ pointerState game
 
 createPictures :: TileList -> PictureList
 createPictures []    = []
 createPictures tiles = map (\tile -> picture tile) tiles
 
 -- | Initialize the game with this game state.
-initialState :: PictureList -> RandomList -> GameState
-initialState images randomList =
+initialState :: PictureList -> PictureList -> RandomList -> GameState
+initialState images pointerFrames randomList =
   let startingMapNumber = 0
       startingTiles = generateMap images randomList startingMapNumber
       startingPointerState =
-        PointerState {frames = [], index = 0, coords = (20, 20)}
+        PointerState {frames = pointerFrames, index = 0, coords = (20, 20)}
    in GameState
         { tiles = startingTiles
         , pointerState = startingPointerState
