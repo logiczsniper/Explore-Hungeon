@@ -52,7 +52,7 @@ height = 700
 
 offset = 0
 
-fps = 25
+fps = 15
 
 window :: Display
 window = InWindow "Explore" (width, height) (offset, offset)
@@ -87,11 +87,14 @@ update time initState =
           { frames = frames $ pointerState initState
           , index = incrementIndex increment (index $ pointerState initState)
           , coords = coords $ pointerState initState
+          , size =
+              updateSize (size $ pointerState initState) $ mapNumber initState
           }
     , mapNumber = mapNumber initState
+    , currentDuration = (currentDuration initState) + time
     }
   where
-    increment = round $ time / (1 / 25)
+    increment = round $ time / (1 / 15)
 
 incrementIndex :: Int -> Int -> Int
 incrementIndex x 0 = x
@@ -99,16 +102,25 @@ incrementIndex startIndex increment
   | startIndex == 5 = incrementIndex 0 (increment - 1)
   | startIndex < 5 = incrementIndex (startIndex + 1) (increment - 1)
 
+updateSize :: Size -> MapNumber -> Size
+updateSize x mapNumber
+  | x <= 0 = 0
+  | otherwise = x - (0.001 + (fromIntegral mapNumber) * 0.0012)
+
 -- | Draw a game state (convert it to a picture).
 render :: GameState -> Picture
 render game =
   pictures $
   (createPictures $ tiles game) ++
-  [translatePointer (pointerFrames !! pointerIndex) pointerCoords]
+  [ translatePointer
+      (scale pointerSize pointerSize $ pointerFrames !! pointerIndex)
+      pointerCoords
+  ]
   where
     pointerCoords = coords $ pointerState game
     pointerFrames = frames $ pointerState game
     pointerIndex = index $ pointerState game
+    pointerSize = size $ pointerState game
 
 createPictures :: TileList -> PictureList
 createPictures []    = []
@@ -120,9 +132,11 @@ initialState images pointerFrames randomList =
   let startingMapNumber = 0
       startingTiles = generateMap images randomList startingMapNumber
       startingPointerState =
-        PointerState {frames = pointerFrames, index = 0, coords = (20, 20)}
+        PointerState
+          {frames = pointerFrames, index = 0, coords = (20, 20), size = 1.7}
    in GameState
         { tiles = startingTiles
         , pointerState = startingPointerState
         , mapNumber = startingMapNumber
+        , currentDuration = 0.0
         }

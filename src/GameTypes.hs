@@ -4,9 +4,10 @@ import           Graphics.Gloss
 
 data GameState =
   GameState
-    { tiles        :: [Tile]
-    , pointerState :: PointerState
-    , mapNumber    :: MapNumber
+    { tiles           :: [Tile]
+    , pointerState    :: PointerState
+    , mapNumber       :: MapNumber
+    , currentDuration :: Duration
     }
   deriving (Show)
 
@@ -14,6 +15,7 @@ data PointerState =
   PointerState
     { frames :: [Picture]
     , index  :: Int
+    , size   :: Size
     , coords :: Coordinates
     }
   deriving (Show)
@@ -52,6 +54,10 @@ type Length = Int
 type MapNumber = Int
 
 type Degrees = Float
+
+type Size = Float
+
+type Duration = Float
 
 data MapType
   = Dry

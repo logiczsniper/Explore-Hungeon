@@ -26,22 +26,32 @@ movePointer startState newCoords =
         PointerState
           { frames = frames $ pointerState startState
           , index = index $ pointerState startState
+          , size = size $ pointerState startState
           , coords = newCoords
           }
     , mapNumber = mapNumber startState
+    , currentDuration = currentDuration startState
     }
 
 tilePointerInteraction ::
      Coordinates -> GameState -> PictureList -> RandomList -> GameState
-tilePointerInteraction coords@(x, y) startState images randomList =
+tilePointerInteraction pointerCoords@(x, y) startState images randomList =
   let entrances = getEntranceCoords $ tiles startState
       newMapNumber = mapNumber startState + 1
       newTiles = generateMap images randomList newMapNumber
-   in if entrances == [] || elem coords entrances
+      newPointerState =
+        PointerState
+          { frames = frames $ pointerState startState
+          , index = index $ pointerState startState
+          , size = 1.7
+          , coords = coords $ pointerState startState
+          }
+   in if entrances == [] || elem pointerCoords entrances
         then GameState
                { tiles = newTiles
-               , pointerState = pointerState startState
+               , pointerState = newPointerState
                , mapNumber = newMapNumber
+               , currentDuration = 0.0
                }
         else startState
 
