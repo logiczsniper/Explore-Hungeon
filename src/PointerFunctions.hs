@@ -28,11 +28,16 @@ movePointer startState newCoords =
           { frames = frames $ pointerState startState
           , index = index $ pointerState startState
           , size = size $ pointerState startState
-          , coords = newCoords
+          , coords = actualCoords
           }
     , mapNumber = mapNumber startState
     , currentDuration = currentDuration startState
     }
+  where
+    actualCoords =
+      if not $ elem newCoords (getBorderCoords (tiles startState))
+        then newCoords
+        else (coords $ pointerState startState)
 
 -- Modifies the game state if the pointer was on an entrance.
 tilePointerInteraction ::
@@ -65,6 +70,10 @@ getEntranceCoords tiles =
   | tile <- tiles
   , isEntrance tile
   ]
+
+getBorderCoords :: TileList -> [Coordinates]
+getBorderCoords tiles =
+  [(columnNumber tile + 12, rowNumber tile + 12) | tile <- tiles, isBorder tile]
 
 -- Get the length and width of the game using the tiles.
 getDimensions :: TileList -> Dimensions

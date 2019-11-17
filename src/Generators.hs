@@ -149,7 +149,6 @@ nextFloor images randomList coordinates@(x, y) mapNumber
     randomInt = getRandomInt randomList coordinates
     nextProbability' = nextProbability randomInt mapNumber
 
--- TODO: pass in random int, nextProbability' and curried getImage
 nextWater :: PictureList -> RandomList -> Coordinates -> MapNumber -> Picture
 nextWater images randomList coordinates@(x, y) mapNumber
   | nextProbability' [0 .. 1] =

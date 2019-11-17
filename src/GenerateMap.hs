@@ -21,6 +21,7 @@ generateMap images randomList mapNumber =
           , columnNumber = 0
           , rowNumber = -1
           , isEntrance = False
+          , isBorder = False
           }
       mapType = getFloorType randomList mapNumber
       gameWidth = fst $ nextDimensions randomList mapNumber
@@ -70,5 +71,13 @@ tileGenerator images randomList mapType mapNumber dimensions@(_, gameLength) pre
               [ (getImage floorDryDoor images 0)
               , (getImage wallSecretOpen images 0)
               , (getImage wallStandardDoor images 0)
+              ]
+        , isBorder =
+            elem
+              newPicture
+              [ (getImage borderSide images 0)
+              , (getImage borderSide images 90)
+              , (getImage borderSide images 180)
+              , (getImage borderSide images 270)
               ]
         }

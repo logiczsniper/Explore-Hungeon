@@ -23,4 +23,5 @@ tileAdjust tile =
     , columnNumber = columnNumber tile
     , rowNumber = rowNumber tile
     , isEntrance = isEntrance tile
+    , isBorder = isBorder tile
     }

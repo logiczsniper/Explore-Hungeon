@@ -26,6 +26,7 @@ data Tile =
     , columnNumber :: Int
     , rowNumber    :: Int
     , isEntrance   :: Bool
+    , isBorder     :: Bool
     }
   deriving (Show, Eq)
 
