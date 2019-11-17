@@ -31,7 +31,12 @@ render game
       translate (-200) (330) $
       scale 0.15 0.15 (text ("Score: " ++ (show $ mapNumber game - 1)))
     gameOver =
-      translate (-65) 10 $ color white $ scale 0.15 0.15 (text "Game Over")
+      pictures
+        [ translate (-65) 10 $ color white $ scale 0.15 0.15 (text "Game Over")
+        , translate (-45) (-15) $
+          color white $
+          scale 0.10 0.10 (text ("Score: " ++ (show $ mapNumber game - 1)))
+        ]
     startMenu =
       pictures
         [ translate (-65) 10 $ color white $ scale 0.15 0.15 (text "Hungeon")
