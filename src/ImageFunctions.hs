@@ -2,6 +2,7 @@ module ImageFunctions
   ( allImages
   , getImage
   , getFrames
+  , getMisc
   ) where
 
 import           GameTypes
@@ -10,8 +11,9 @@ import           Graphics.Gloss.Juicy
 import           ImageConstants
 import           ImagePathHelpers
 
-imagePaths :: [ImagePath]
-imagePaths =
+-- All file paths to images.
+imageBmpPaths :: [ImagePath]
+imageBmpPaths =
   [ borderPath "corner"
   , borderPath "side"
   , floorPath "dry/verticalSide"
@@ -38,16 +40,25 @@ imagePaths =
   , wallPath "plants/one"
   , wallPath "plants/two"
   , wallPath "plants/three"
-  , pointerPath "one"
+  , floorPath "dry/chest"
+  ]
+
+imagePngPaths :: [ImagePath]
+imagePngPaths =
+  [ pointerPath "one"
   , pointerPath "two"
   , pointerPath "three"
   , pointerPath "four"
   , pointerPath "five"
   , pointerPath "six"
+  , miscPath "barrel"
+  , miscPath "pillar"
+  , miscPath "waterBarrel"
   ]
 
+-- Get all TILE images.
 allImages :: IO PictureList
-allImages = mapM loadBMP $ take 26 imagePaths
+allImages = mapM loadBMP imageBmpPaths
 
 getImage :: Int -> PictureList -> Degrees -> Picture
 getImage index images rotation = rotate rotation (images !! (index))
@@ -59,7 +70,14 @@ getAlphaImage path = do
     Nothing           -> return blank
     Just pointerImage -> return pointerImage
 
+-- Get all FRAME images (for the pointer only).
 getFrames :: IO PictureList
 getFrames =
-  let paths = drop 26 imagePaths
+  let paths = take 6 imagePngPaths
+   in mapM getAlphaImage paths
+
+-- Get addons - larger objects rendered above a tile. Not 16 by 16.
+getMisc :: IO PictureList
+getMisc =
+  let paths = drop 6 imagePngPaths
    in mapM getAlphaImage paths

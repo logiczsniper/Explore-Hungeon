@@ -3,6 +3,7 @@ module ImagePathHelpers
   , floorPath
   , wallPath
   , pointerPath
+  , miscPath
   ) where
 
 import           GameTypes (ImagePath)
@@ -24,4 +25,9 @@ wallPath = newPath "walls"
 pointerPath :: ImagePath -> ImagePath
 pointerPath name =
   "C:/Users/lczer/Desktop/Projects/HaskellGame/Explore/app/assets/images/pointer/" ++
+  name ++ ".png"
+
+miscPath :: ImagePath -> ImagePath
+miscPath name =
+  "C:/Users/lczer/Desktop/Projects/HaskellGame/Explore/app/assets/images/misc/" ++
   name ++ ".png"

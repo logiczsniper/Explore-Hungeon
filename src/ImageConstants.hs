@@ -2,6 +2,8 @@ module ImageConstants where
 
 import           GameTypes (ImageId)
 
+-- Basic number associations for the various tiles.
+-- Each number is that tile's index in the all images list.
 borderCorner, borderSide :: ImageId
 borderCorner = 0
 
@@ -66,5 +68,14 @@ wallPlantsTwo = 24
 
 wallPlantsThree = 25
 
-basicPointer :: ImageId
-basicPointer = 26
+floorDryChest :: ImageId
+floorDryChest = 26
+
+barrel :: ImageId
+barrel = 27
+
+pillar :: ImageId
+pillar = 28
+
+waterBarrel :: ImageId
+waterBarrel = 29

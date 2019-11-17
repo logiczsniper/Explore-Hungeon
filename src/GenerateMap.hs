@@ -9,9 +9,10 @@ import           Generators
 import           Graphics.Gloss (Picture, blank, pictures)
 import           ImageConstants
 import           ImageFunctions (getImage)
-import           Probability    (floorsProbability)
+import           Probability    (getFloorType)
 import           TileAdjust
 
+-- Create a map with dimensions ranging and randomly generated floors and walls.
 generateMap :: PictureList -> RandomList -> MapNumber -> TileList
 generateMap images randomList mapNumber =
   let startingTile =
@@ -21,7 +22,7 @@ generateMap images randomList mapNumber =
           , rowNumber = -1
           , isEntrance = False
           }
-      mapType = floorsProbability randomList mapNumber
+      mapType = getFloorType randomList mapNumber
       gameWidth = fst $ nextDimensions randomList mapNumber
       gameLength = snd $ nextDimensions randomList mapNumber
       allTiles =
@@ -36,12 +37,14 @@ generateMap images randomList mapNumber =
           startingTile
    in map tileAdjust allTiles
 
+-- Assert whether the tile is not a blank and not the starting tile.
 checkTile :: Tile -> Bool
 checkTile tile =
   if picture tile == blank && rowNumber tile /= -1
     then False
     else True
 
+-- Create the next tile.
 tileGenerator ::
      PictureList
   -> RandomList

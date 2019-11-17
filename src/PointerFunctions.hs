@@ -18,6 +18,7 @@ translatePointer pointer (x, y) =
     (intToFloat $ 16 * (y + 1) - 408)
     pointer
 
+-- Replicates current game state, except using the given coords.
 movePointer :: GameState -> Coordinates -> GameState
 movePointer startState newCoords =
   GameState
@@ -33,18 +34,20 @@ movePointer startState newCoords =
     , currentDuration = currentDuration startState
     }
 
+-- Modifies the game state if the pointer was on an entrance.
 tilePointerInteraction ::
      Coordinates -> GameState -> PictureList -> RandomList -> GameState
 tilePointerInteraction pointerCoords@(x, y) startState images randomList =
   let entrances = getEntranceCoords $ tiles startState
       newMapNumber = mapNumber startState + 1
       newTiles = generateMap images randomList newMapNumber
+      (width, length) = getDimensions newTiles
       newPointerState =
         PointerState
           { frames = frames $ pointerState startState
           , index = index $ pointerState startState
           , size = 1.7
-          , coords = coords $ pointerState startState
+          , coords = (width + 3, length + 3)
           }
    in if entrances == [] || elem pointerCoords entrances
         then GameState
@@ -55,9 +58,17 @@ tilePointerInteraction pointerCoords@(x, y) startState images randomList =
                }
         else startState
 
+-- Get a list of coords for all tiles classified as an entrance.
 getEntranceCoords :: TileList -> [Coordinates]
 getEntranceCoords tiles =
   [ (columnNumber tile + 12, rowNumber tile + 12)
   | tile <- tiles
   , isEntrance tile
   ]
+
+-- Get the length and width of the game using the tiles.
+getDimensions :: TileList -> Dimensions
+getDimensions tiles =
+  let maxX = maximum [columnNumber tile | tile <- tiles]
+      maxY = maximum [rowNumber tile | tile <- tiles]
+   in (maxX, maxY)

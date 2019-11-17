@@ -63,28 +63,3 @@ data MapType
   = Dry
   | Wet
   deriving (Enum, Eq)
-
-data WallType
-  = Plants
-  | Secret
-  | Standard
-  deriving (Enum, Eq)
-
-data SecretWallType
-  = Open
-  | Cracked
-  | Closed
-  deriving (Enum, Eq)
-
-data PlantType
-  = One
-  | Two
-  | Three
-  deriving (Enum, Eq)
-
-data StandardWallType
-  = Door
-  | Boarded
-  | Fancy
-  | Plain
-  deriving (Enum, Eq)
