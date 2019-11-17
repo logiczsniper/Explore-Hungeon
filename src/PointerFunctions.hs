@@ -35,7 +35,8 @@ movePointer startState newCoords =
     }
   where
     actualCoords =
-      if not $ elem newCoords (getBorderCoords (tiles startState))
+      if not (elem newCoords (getBorderCoords (tiles startState))) &&
+         mapNumber startState > 0
         then newCoords
         else (coords $ pointerState startState)
 

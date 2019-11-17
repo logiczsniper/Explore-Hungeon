@@ -17,6 +17,7 @@ handleEvent images randomList key initState =
     EventKey (Char 'a') Down _ _ -> movePointer initState (x - 1, y)
     EventKey (Char 'd') Down _ _ -> movePointer initState (x + 1, y)
     EventKey (Char 'q') Down _ _ -> error "Player has quit."
+    EventKey (Char 'b') Down _ _ -> beginGame initState
     EventKey (Char 'e') Down _ _ ->
       tilePointerInteraction pointerCoords initState images randomList
     otherwise -> initState
@@ -24,3 +25,15 @@ handleEvent images randomList key initState =
     pointerCoords = coords $ pointerState initState
     x = fst pointerCoords
     y = snd pointerCoords
+
+beginGame :: GameState -> GameState
+beginGame startState =
+  GameState
+    { tiles = tiles startState
+    , pointerState = pointerState startState
+    , mapNumber =
+        if mapNumber startState == 0
+          then 1
+          else mapNumber startState
+    , currentDuration = 0
+    }

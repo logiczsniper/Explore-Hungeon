@@ -8,12 +8,14 @@ import           PointerFunctions (translatePointer)
 
 -- Draw a game state (convert it to a picture).
 render :: GameState -> Picture
-render game =
-  if pointerSize <= 0.001
-    -- If the game is over, display game over text.
-    then gameOver
-    -- Else, render the game itself: tiles, pointer, shade, score.
-    else pictures $ (createPictures $ tiles game) ++ [pointer, shade, score]
+render game
+  -- If the game is over, display game over text.
+  | pointerSize <= 0.001 = gameOver
+  -- Render menu if mapNumber is 0.
+  | mapNumber game == 0 = startMenu
+  -- Else, render the game itself: tiles, pointer, shade, score.
+  | otherwise =
+    pictures $ (createPictures $ tiles game) ++ [pointer, shade, score]
   where
     pointerCoords = coords $ pointerState game
     pointerFrames = frames $ pointerState game
@@ -27,9 +29,15 @@ render game =
     score =
       color white $
       translate (-200) (330) $
-      scale 0.15 0.15 (text ("Score: " ++ (show $ mapNumber game)))
+      scale 0.15 0.15 (text ("Score: " ++ (show $ mapNumber game - 1)))
     gameOver =
       translate (-65) 10 $ color white $ scale 0.15 0.15 (text "Game Over")
+    startMenu =
+      pictures
+        [ translate (-65) 10 $ color white $ scale 0.15 0.15 (text "Hungeon")
+        , translate (-95) (-15) $
+          color white $ scale 0.10 0.10 (text "Press `b` to begin!")
+        ]
 
 -- Using the size, get the corresponding alpha value for the shade. Make color with it.
 -- Such that when size = 0, alpha = 255 and
