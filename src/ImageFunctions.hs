@@ -60,9 +60,11 @@ imagePngPaths =
 allImages :: IO PictureList
 allImages = mapM loadBMP imageBmpPaths
 
+-- Get an image from its image constant value and apply it's rotation.
 getImage :: Int -> PictureList -> Degrees -> Picture
 getImage index images rotation = rotate rotation (images !! (index))
 
+-- Get an image using Juicy Pixels which contains alpha channel (png format).
 getAlphaImage :: ImagePath -> IO Picture
 getAlphaImage path = do
   mPointerImage <- loadJuicyPNG $ path

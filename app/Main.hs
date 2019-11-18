@@ -11,19 +11,18 @@ import           Graphics.Gloss.Interface.Pure.Game
 import           Sound.ProteaAudio
 import           System.Random
 
-import           Control.Concurrent
-import           Control.Monad
-
 main :: IO ()
 main
   -- Complete all IO actions.
  = do
+  result <- initAudio 64 44100 1024
+  backgroundMusic <- getBackgroundMusic
   addons <- getMisc
   frames <- getFrames
   images <- allImages
-  sounds <- getSounds
   generator <- getStdGen
-  soundLoop (sounds !! 0) 1 1 0 1
+  -- Play background music.
+  soundLoop backgroundMusic 1 1 0 1
   -- Play game.
   play
     window
@@ -31,5 +30,5 @@ main
     fps
     (initialState (images ++ addons) frames $ randomRs (0, 99) generator)
     render
-    (handleEvent (images ++ addons) sounds $ randomRs (0, 99) generator)
+    (handleEvent (images ++ addons) $ randomRs (0, 99) generator)
     update

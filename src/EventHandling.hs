@@ -9,9 +9,8 @@ import           PointerFunctions
 
 -- Handle the mouse input from the user, changing the game state.
 -- Controls: WASD for directions, E to enter a door, Q to quit the game.
-handleEvent ::
-     PictureList -> SampleList -> RandomList -> Event -> GameState -> GameState
-handleEvent images sounds randomList key initState =
+handleEvent :: PictureList -> RandomList -> Event -> GameState -> GameState
+handleEvent images randomList key initState =
   case key of
     EventKey (Char 'w') Down _ _ -> movePointer initState (x, y + 1)
     EventKey (Char 's') Down _ _ -> movePointer initState (x, y - 1)
@@ -27,6 +26,7 @@ handleEvent images sounds randomList key initState =
     x = fst pointerCoords
     y = snd pointerCoords
 
+-- Will change the map number from 0 to 1 ONLY, beginning the game.
 beginGame :: GameState -> GameState
 beginGame startState =
   GameState

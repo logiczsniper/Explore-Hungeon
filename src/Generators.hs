@@ -149,6 +149,7 @@ nextFloor images randomList coordinates@(x, y) mapNumber
     randomInt = getRandomInt randomList coordinates
     nextProbability' = nextProbability randomInt mapNumber
 
+-- Generate the next water floor pseudo randomly.
 nextWater :: PictureList -> RandomList -> Coordinates -> MapNumber -> Picture
 nextWater images randomList coordinates@(x, y) mapNumber
   | nextProbability' [0 .. 1] =

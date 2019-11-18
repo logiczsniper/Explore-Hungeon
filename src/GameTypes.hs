@@ -39,8 +39,6 @@ type TileList = [Tile]
 
 type PictureList = [Picture]
 
-type SampleList = [Sample]
-
 type RandomList = [Int]
 
 type Probability = [Int]
@@ -48,8 +46,6 @@ type Probability = [Int]
 type Pointer = Picture
 
 type ImagePath = String
-
-type SoundPath = String
 
 type ImageId = Int
 

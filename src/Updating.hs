@@ -5,7 +5,7 @@ module Updating
 import           GameTypes
 import           Graphics.Gloss
 
--- | Update the game state.
+-- Update the game state.
 update :: Float -> GameState -> GameState
 update time initState =
   GameState
@@ -24,13 +24,17 @@ update time initState =
   where
     increment = round $ time / (1 / 15)
 
+-- Increase the index of the poiner frame in order to get the next
+-- frame in the animation.
 incrementIndex :: Int -> Int -> Int
 incrementIndex x 0 = x
 incrementIndex startIndex increment
   | startIndex == 5 = incrementIndex 0 (increment - 1)
   | startIndex < 5 = incrementIndex (startIndex + 1) (increment - 1)
 
+-- Decrease the size of the pointer. Varies with mapNumber.
 updateSize :: Size -> MapNumber -> Size
 updateSize x mapNumber
+  | mapNumber == 0 = x
   | x <= 0 = 0
   | otherwise = x - (0.001 + (fromIntegral mapNumber) * 0.0012)

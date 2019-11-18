@@ -72,6 +72,7 @@ getEntranceCoords tiles =
   , isEntrance tile
   ]
 
+-- Get a list of coords for all tiles classified as a border. (Collision detection).
 getBorderCoords :: TileList -> [Coordinates]
 getBorderCoords tiles =
   [(columnNumber tile + 12, rowNumber tile + 12) | tile <- tiles, isBorder tile]
